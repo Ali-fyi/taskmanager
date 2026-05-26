@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard — TaskManager</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- ── Header ─────────────────────────────────────────── -->
+    <header class="site-header">
+        <div class="header-inner">
+            <span class="logo">✓ TaskManager</span>
+            <div class="header-right">
+                <span id="user-badge" class="user-badge"></span>
+                <button id="btn-logout" class="btn btn-ghost btn-sm">Déconnexion</button>
+            </div>
+        </div>
+    </header>
+
+    <!-- ── Main ───────────────────────────────────────────── -->
+    <main>
+        <div class="container">
+
+            <!-- Nouvelle tâche -->
+            <section class="card">
+                <h2>Nouvelle tâche</h2>
+                <div class="create-form">
+                    <select id="project-select" title="Projet">
+                        <option value="">Chargement…</option>
+                    </select>
+                    <input type="text" id="task-title" placeholder="Titre de la tâche…" maxlength="255">
+                    <button id="btn-create" class="btn btn-primary">+ Ajouter</button>
+                </div>
+                <div id="create-error" class="error-msg hidden"></div>
+            </section>
+
+            <!-- Liste des tâches -->
+            <section>
+                <div class="list-header">
+                    <h2 id="task-count">Tâches</h2>
+                    <button id="btn-refresh" class="btn btn-ghost btn-sm">↻ Actualiser</button>
+                </div>
+
+                <div id="loading" class="loading"></div>
+                <div id="task-list"></div>
+                <div id="empty" class="empty hidden">
+                    Aucune tâche ne vous est assignée pour l'instant.<br>
+                    <small style="color:var(--slate-300)">Créez-en une ci-dessus ou assignez-vous une tâche dans l'app web.</small>
+                </div>
+            </section>
+
+        </div>
+    </main>
+
+    <script src="app.js"></script>
+    <script>
+        // ── Garde : redirige si pas connecté ─────────────────
+        requireAuth();
+
+        // ── State ─────────────────────────────────────────────
+        let allTasks    = [];
+        let allStatuses = []; // collectés depuis les tâches chargées
+
+        // ── Init ──────────────────────────────────────────────
+        const user = getUser();
+        if (user) {
+            document.getElementById('user-badge').textContent = user.name || user.email;
+        }
+
+        // Logout
+        document.getElementById('btn-logout').addEventListener('click', async () => {
+            try { await api.logout(); } catch {}
+            removeToken();
+            window.location.href = 'login.html';
+        });
+
+        // Refresh
+        document.getElementById('btn-refresh').addEventListener('click', loadTasks);
+
+        // Créer tâche
+        document.getElementById('btn-create').addEventListener('click', createTask);
+        document.getElementById('task-title').addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') createTask();
+        });
+
+        // ── Charger les projets ────────────────────────────────
+        async function loadProjects() {
+            const sel = document.getElementById('project-select');
+            try {
+                const { ok, data } = await api.projects();
+                if (!ok || !Array.isArray(data.data)) throw new Error();
+
+                if (data.data.length === 0) {
+                    sel.innerHTML = '<option value="">Aucun projet disponible</option>';
+                    return;
+                }
+
+                sel.innerHTML = '<option value="">Choisir un projet…</option>'
+                    + data.data.map(p =>
+                        `<option value="${p.id}">${escHtml(p.name)}</option>`
+                    ).join('');
+            } catch {
+                sel.innerHTML = '<option value="">Impossible de charger les projets</option>';
+            }
+        }
+
+        // ── Charger les tâches ─────────────────────────────────
+        async function loadTasks() {
+            const listEl   = document.getElementById('task-list');
+            const loadEl   = document.getElementById('loading');
+            const emptyEl  = document.getElementById('empty');
+            const countEl  = document.getElementById('task-count');
+
+            listEl.innerHTML = '';
+            loadEl.classList.remove('hidden');
+            emptyEl.classList.add('hidden');
+            countEl.textContent = 'Tâches';
+
+            try {
+                const { ok, data } = await api.tasks();
+                loadEl.classList.add('hidden');
+
+                if (!ok) throw new Error(data.message || 'Erreur lors du chargement.');
+
+                allTasks = data.data || [];
+
+                // Collecter les statuts uniques depuis les tâches
+                const statusMap = {};
+                allTasks.forEach(t => {
+                    if (t.status && t.status.id) {
+                        statusMap[t.status.id] = t.status;
+                    }
+                });
+                allStatuses = Object.values(statusMap).sort((a, b) => (a.position || 0) - (b.position || 0));
+
+                countEl.textContent = 'Tâches (' + allTasks.length + ')';
+
+                if (allTasks.length === 0) {
+                    emptyEl.classList.remove('hidden');
+                    return;
+                }
+
+                renderTasks(allTasks);
+
+            } catch (err) {
+                loadEl.classList.add('hidden');
+                listEl.innerHTML = `<div class="error-msg">${escHtml(err.message)}</div>`;
+            }
+        }
+
+        // ── Rendu de la liste ──────────────────────────────────
+        function renderTasks(tasks) {
+            const listEl = document.getElementById('task-list');
+
+            listEl.innerHTML = tasks.map(task => {
+                const status    = task.status;
+                const project   = task.project;
+                const workspace = project?.workspace;
+                const assignee  = task.assignee;
+                const dueDate   = task.due_date;
+                const overdue   = isOverdue(dueDate);
+
+                // Breadcrumb
+                const breadcrumb = project
+                    ? `${escHtml(workspace?.name || '')}<span>›</span>${escHtml(project.name)}`
+                    : '';
+
+                // Status select
+                const statusSelect = buildStatusSelect(task.id, status);
+
+                // Footer (assigné + date)
+                const footerParts = [];
+                if (assignee) {
+                    footerParts.push(`<span class="tag">👤 ${escHtml(assignee.name)}</span>`);
+                }
+                if (dueDate) {
+                    const cls = overdue ? ' due-overdue' : '';
+                    footerParts.push(`<span class="tag${cls}">📅 ${formatDate(dueDate)}${overdue ? ' — En retard' : ''}</span>`);
+                }
+
+                return `
+                <div class="task-card" data-id="${task.id}">
+                    <div class="task-main">
+                        <div class="task-info">
+                            <span class="task-title" title="${escHtml(task.title)}">${escHtml(task.title)}</span>
+                            ${breadcrumb ? `<p class="task-breadcrumb">${breadcrumb}</p>` : ''}
+                        </div>
+                        <div class="task-actions">
+                            ${statusSelect}
+                            <button class="btn btn-danger btn-sm" onclick="deleteTask(${task.id})" title="Supprimer">✕</button>
+                        </div>
+                    </div>
+                    ${footerParts.length
+                        ? `<div class="task-footer">${footerParts.join('')}</div>`
+                        : ''}
+                </div>`;
+            }).join('');
+
+            // Appliquer la couleur de fond aux selects de statut
+            document.querySelectorAll('.status-select').forEach(applyStatusColor);
+        }
+
+        // ── Status select par tâche ────────────────────────────
+        function buildStatusSelect(taskId, currentStatus) {
+            const options = [
+                `<option value="" ${!currentStatus ? 'selected' : ''}>Sans statut</option>`,
+                ...allStatuses.map(s =>
+                    `<option value="${s.id}" ${currentStatus?.id === s.id ? 'selected' : ''}>${escHtml(s.name)}</option>`
+                )
+            ].join('');
+
+            return `<select class="status-select"
+                data-task-id="${taskId}"
+                data-color="${currentStatus?.color || ''}"
+                onchange="changeStatus(this)"
+                title="Changer le statut">
+                ${options}
+            </select>`;
+        }
+
+        // Applique background + couleur inline sur le select
+        function applyStatusColor(sel) {
+            const color = sel.dataset.color;
+            if (color) {
+                sel.style.background = color + '20';
+                sel.style.color      = color;
+            } else {
+                sel.style.background = 'var(--slate-100)';
+                sel.style.color      = 'var(--slate-500)';
+            }
+        }
+
+        // ── Changer le statut ──────────────────────────────────
+        async function changeStatus(selectEl) {
+            const taskId  = selectEl.dataset.taskId;
+            const statusId = selectEl.value ? +selectEl.value : null;
+
+            selectEl.disabled = true;
+            try {
+                const { ok, data } = await api.updateTask(taskId, { status_id: statusId });
+                if (!ok) throw new Error(data.message || 'Erreur');
+
+                // Mettre à jour la couleur du select
+                const newStatus = data.data?.status;
+                selectEl.dataset.color = newStatus?.color || '';
+                applyStatusColor(selectEl);
+
+                // Mettre à jour allStatuses si nouveau statut inconnu
+                if (newStatus && !allStatuses.find(s => s.id === newStatus.id)) {
+                    allStatuses.push(newStatus);
+                }
+            } catch (err) {
+                alert('Erreur : ' + err.message);
+                // Recharger pour retrouver l'état correct
+                await loadTasks();
+            } finally {
+                selectEl.disabled = false;
+            }
+        }
+
+        // ── Créer une tâche ────────────────────────────────────
+        async function createTask() {
+            showError('create-error', '');
+
+            const projectId = document.getElementById('project-select').value;
+            const title     = document.getElementById('task-title').value.trim();
+            const btn       = document.getElementById('btn-create');
+
+            if (!projectId) {
+                showError('create-error', 'Sélectionnez un projet.');
+                return;
+            }
+            if (!title) {
+                showError('create-error', 'Le titre est requis.');
+                document.getElementById('task-title').focus();
+                return;
+            }
+
+            btn.disabled    = true;
+            btn.textContent = '…';
+
+            try {
+                const { ok, data } = await api.createTask({
+                    project_id: +projectId,
+                    title,
+                });
+
+                if (!ok) {
+                    const msg = firstValidationError(data) || data.message || 'Erreur lors de la création.';
+                    showError('create-error', msg);
+                    return;
+                }
+
+                document.getElementById('task-title').value = '';
+                await loadTasks();
+
+            } catch (err) {
+                showError('create-error', err.message);
+            } finally {
+                btn.disabled    = false;
+                btn.textContent = '+ Ajouter';
+            }
+        }
+
+        // ── Supprimer une tâche ────────────────────────────────
+        async function deleteTask(id) {
+            if (!confirm('Supprimer cette tâche ?')) return;
+
+            // Cacher la carte immédiatement (feedback rapide)
+            const card = document.querySelector(`.task-card[data-id="${id}"]`);
+            if (card) card.style.opacity = '.4';
+
+            try {
+                const { ok, data } = await api.deleteTask(id);
+                if (!ok) throw new Error(data.message || 'Erreur lors de la suppression.');
+                await loadTasks();
+            } catch (err) {
+                if (card) card.style.opacity = '1';
+                alert('Erreur : ' + err.message);
+            }
+        }
+
+        // ── Utilitaires ────────────────────────────────────────
+
+        /** Échappe les caractères HTML (contre injections XSS). */
+        function escHtml(str) {
+            if (!str) return '';
+            return String(str)
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;');
+        }
+
+        /** Renvoie la première erreur de validation du payload Laravel. */
+        function firstValidationError(data) {
+            if (!data.errors) return null;
+            const first = Object.values(data.errors)[0];
+            return Array.isArray(first) ? first[0] : first;
+        }
+
+        // ── Lancement ─────────────────────────────────────────
+        loadProjects();
+        loadTasks();
+    </script>
+</body>
+</html>

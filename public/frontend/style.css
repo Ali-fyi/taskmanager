@@ -1,0 +1,349 @@
+/* ─────────────────────────────────────────────
+   TaskManager Frontend — Global Styles
+───────────────────────────────────────────── */
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+    --indigo:    #4f46e5;
+    --indigo-h:  #4338ca;
+    --slate-50:  #f8fafc;
+    --slate-100: #f1f5f9;
+    --slate-200: #e2e8f0;
+    --slate-400: #94a3b8;
+    --slate-500: #64748b;
+    --slate-700: #334155;
+    --slate-900: #0f172a;
+    --red:       #dc2626;
+    --red-h:     #b91c1c;
+    --green:     #16a34a;
+    --radius:    8px;
+    --shadow:    0 1px 3px rgba(0,0,0,.08), 0 1px 2px rgba(0,0,0,.06);
+}
+
+body {
+    font-family: system-ui, -apple-system, sans-serif;
+    background: var(--slate-50);
+    color: var(--slate-900);
+    line-height: 1.5;
+    min-height: 100vh;
+}
+
+/* ── Typography ── */
+h1 { font-size: 1.5rem; font-weight: 700; }
+h2 { font-size: 1rem; font-weight: 600; color: var(--slate-700); }
+
+/* ── Buttons ── */
+.btn {
+    display: inline-flex;
+    align-items: center;
+    gap: .4rem;
+    padding: .5rem 1rem;
+    border: none;
+    border-radius: var(--radius);
+    font-size: .875rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background .15s, opacity .15s;
+    white-space: nowrap;
+}
+.btn:disabled { opacity: .5; cursor: not-allowed; }
+.btn-primary  { background: var(--indigo); color: #fff; }
+.btn-primary:hover:not(:disabled)  { background: var(--indigo-h); }
+.btn-danger   { background: #fee2e2; color: var(--red); }
+.btn-danger:hover:not(:disabled)   { background: #fecaca; }
+.btn-ghost    { background: transparent; color: var(--slate-500); }
+.btn-ghost:hover:not(:disabled)    { background: var(--slate-100); }
+.btn-sm       { padding: .25rem .6rem; font-size: .8rem; }
+
+/* ── Inputs ── */
+input[type="text"],
+input[type="email"],
+input[type="password"] {
+    width: 100%;
+    padding: .6rem .75rem;
+    border: 1px solid var(--slate-200);
+    border-radius: var(--radius);
+    font-size: .9rem;
+    background: #fff;
+    color: var(--slate-900);
+    transition: border-color .15s, box-shadow .15s;
+    outline: none;
+}
+input:focus {
+    border-color: var(--indigo);
+    box-shadow: 0 0 0 3px rgba(79,70,229,.12);
+}
+
+label {
+    display: block;
+    font-size: .8rem;
+    font-weight: 500;
+    color: var(--slate-500);
+    margin-bottom: .3rem;
+}
+
+/* ── Cards ── */
+.card {
+    background: #fff;
+    border: 1px solid var(--slate-200);
+    border-radius: var(--radius);
+    padding: 1.25rem;
+    box-shadow: var(--shadow);
+}
+
+/* ── Feedback ── */
+.error-msg {
+    margin-top: .5rem;
+    padding: .6rem .75rem;
+    background: #fee2e2;
+    color: var(--red);
+    border-radius: var(--radius);
+    font-size: .85rem;
+}
+.success-msg {
+    margin-top: .5rem;
+    padding: .6rem .75rem;
+    background: #dcfce7;
+    color: var(--green);
+    border-radius: var(--radius);
+    font-size: .85rem;
+}
+.hidden { display: none !important; }
+
+/* ── Loading skeleton ── */
+.loading {
+    text-align: center;
+    padding: 2rem;
+    color: var(--slate-400);
+    font-size: .9rem;
+}
+.loading::after {
+    content: '';
+    display: block;
+    width: 32px;
+    height: 32px;
+    border: 3px solid var(--slate-200);
+    border-top-color: var(--indigo);
+    border-radius: 50%;
+    margin: .75rem auto 0;
+    animation: spin .7s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+.empty {
+    text-align: center;
+    padding: 3rem 1rem;
+    color: var(--slate-400);
+    font-size: .9rem;
+}
+
+/* ─────────────────────────────────────────────
+   LOGIN PAGE
+───────────────────────────────────────────── */
+.login-page {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    padding: 1rem;
+}
+
+.login-card {
+    width: 100%;
+    max-width: 380px;
+}
+
+.login-card .brand {
+    text-align: center;
+    margin-bottom: 1.5rem;
+}
+.login-card .brand-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 48px;
+    height: 48px;
+    background: var(--indigo);
+    color: #fff;
+    border-radius: 12px;
+    font-size: 1.5rem;
+    margin-bottom: .75rem;
+}
+.login-card .brand h1 {
+    font-size: 1.25rem;
+    color: var(--slate-900);
+}
+.login-card .brand p {
+    font-size: .85rem;
+    color: var(--slate-400);
+    margin-top: .2rem;
+}
+
+.login-card form .field { margin-bottom: 1rem; }
+.login-card .submit-btn {
+    width: 100%;
+    justify-content: center;
+    padding: .7rem;
+    font-size: .95rem;
+    margin-top: .5rem;
+}
+
+/* ─────────────────────────────────────────────
+   DASHBOARD PAGE
+───────────────────────────────────────────── */
+
+/* Header */
+.site-header {
+    background: #fff;
+    border-bottom: 1px solid var(--slate-200);
+    position: sticky;
+    top: 0;
+    z-index: 10;
+}
+.header-inner {
+    max-width: 860px;
+    margin: 0 auto;
+    padding: .75rem 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+.logo {
+    font-weight: 700;
+    font-size: 1rem;
+    color: var(--indigo);
+    letter-spacing: -.02em;
+}
+.header-right {
+    display: flex;
+    align-items: center;
+    gap: .5rem;
+}
+.user-badge {
+    font-size: .8rem;
+    color: var(--slate-500);
+    background: var(--slate-100);
+    padding: .25rem .6rem;
+    border-radius: 999px;
+}
+
+/* Container */
+.container {
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 1.5rem 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+}
+
+/* Create form */
+.create-form {
+    display: flex;
+    gap: .5rem;
+    flex-wrap: wrap;
+    margin-top: .75rem;
+}
+.create-form select {
+    padding: .6rem .75rem;
+    border: 1px solid var(--slate-200);
+    border-radius: var(--radius);
+    font-size: .875rem;
+    background: #fff;
+    color: var(--slate-900);
+    outline: none;
+    flex: 0 0 200px;
+    cursor: pointer;
+    transition: border-color .15s;
+}
+.create-form select:focus { border-color: var(--indigo); }
+.create-form input { flex: 1; min-width: 160px; }
+.create-form .btn  { flex: 0 0 auto; }
+
+/* List header */
+.list-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: .75rem;
+}
+
+/* Task card */
+.task-card {
+    background: #fff;
+    border: 1px solid var(--slate-200);
+    border-radius: var(--radius);
+    padding: .875rem 1rem;
+    margin-bottom: .5rem;
+    box-shadow: var(--shadow);
+    transition: box-shadow .15s;
+}
+.task-card:hover { box-shadow: 0 4px 12px rgba(0,0,0,.08); }
+
+.task-main {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 1rem;
+}
+.task-info { flex: 1; min-width: 0; }
+.task-title {
+    font-size: .9rem;
+    font-weight: 500;
+    color: var(--slate-900);
+    display: block;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.task-breadcrumb {
+    font-size: .75rem;
+    color: var(--slate-400);
+    margin-top: .15rem;
+}
+.task-breadcrumb span { color: var(--slate-300); margin: 0 .2rem; }
+
+.task-actions {
+    display: flex;
+    align-items: center;
+    gap: .5rem;
+    flex-shrink: 0;
+}
+
+/* Status select (styled as pill) */
+.status-select {
+    appearance: none;
+    border: none;
+    border-radius: 999px;
+    padding: .25rem .65rem;
+    font-size: .75rem;
+    font-weight: 500;
+    cursor: pointer;
+    outline: none;
+    background: var(--slate-100);
+    color: var(--slate-500);
+}
+
+.task-footer {
+    display: flex;
+    align-items: center;
+    gap: .75rem;
+    margin-top: .5rem;
+    padding-top: .5rem;
+    border-top: 1px solid var(--slate-100);
+    font-size: .75rem;
+    color: var(--slate-400);
+}
+.task-footer .tag {
+    display: inline-flex;
+    align-items: center;
+    gap: .25rem;
+}
+.due-overdue { color: var(--red) !important; font-weight: 500; }
+
+@media (max-width: 560px) {
+    .create-form select { flex: 1 1 100%; }
+    .create-form input  { flex: 1 1 100%; }
+    .task-main { flex-direction: column; gap: .5rem; }
+}
