@@ -1,6 +1,14 @@
 # TaskManager
 
-PHPLaravelSanctumSQLiteLicense
+![PHP]([https://img.shields.io/badge/PHP-8.4-777BB4?logo=php&logoColor=white](https://img.shields.io/badge/PHP-8.4-777BB4?logo=php&logoColor=white))
+
+![Laravel]([https://img.shields.io/badge/Laravel-13.x-FF2D20?logo=laravel&logoColor=white](https://img.shields.io/badge/Laravel-13.x-FF2D20?logo=laravel&logoColor=white))
+
+![Sanctum]([https://img.shields.io/badge/Sanctum-4.x-FF2D20?logo=laravel&logoColor=white](https://img.shields.io/badge/Sanctum-4.x-FF2D20?logo=laravel&logoColor=white))
+
+![SQLite]([https://img.shields.io/badge/SQLite-local-003B57?logo=sqlite&logoColor=white](https://img.shields.io/badge/SQLite-local-003B57?logo=sqlite&logoColor=white))
+
+![License]([https://img.shields.io/badge/license-MIT-22c55e](https://img.shields.io/badge/license-MIT-22c55e))
 
 > A full-featured collaborative task management platform inspired by **Trello** and **Linear**, built with Laravel.  
 
@@ -11,11 +19,17 @@ PHPLaravelSanctumSQLiteLicense
 ## Table of Contents
 
 - [Features](#features)
+
 - [Tech Stack](#tech-stack)
+
 - [Requirements](#requirements)
+
 - [Installation](#installation)
+
 - [API](#api)
+
 - [Screenshots](#screenshots)
+
 - [License](#license)
 
 ---
@@ -71,8 +85,11 @@ PHPLaravelSanctumSQLiteLicense
 ## Requirements
 
 - PHP >= 8.4
+
 - Composer
+
 - Node.js >= 20
+
 - SQLite (included with PHP)
 
 ---
@@ -105,7 +122,7 @@ npm run dev
 
 ```
 
-Visit: [http://localhost:8000](http://localhost:8000](http://localhost:8000))
+Visit: [[http://localhost:8000](http://localhost:8000)](http://localhost:8000](http://localhost:8000))
 
 ---
 
@@ -133,27 +150,31 @@ Endpoints available: `/api/projects` and `/api/tasks` (full CRUD, paginated).
 
 ### Dashboard
 
-Dashboard
+![Dashboard](docs/Screenshots/dashboard.png)
 
 ### Workspaces
 
-Workspaces
+![Workspaces](docs/Screenshots/workspace-list.png)
 
 ### Workspace Detail
 
-Workspace detail 1Workspace detail 2
+![Workspace detail 1](docs/Screenshots/workspace-detail/img-1.png)
+
+![Workspace detail 2](docs/Screenshots/workspace-detail/img-2.png)
 
 ### Project View
 
-Project view
+![Project view](docs/Screenshots/project-view.png)
 
 ### Task View
 
-Task view
+![Task view](docs/Screenshots/task-view.png)
 
-### **API**
+### API
 
-API 1API 2
+![API 1](docs/Screenshots/api-detail/img-1.png)
+
+![API 2](docs/Screenshots/api-detail/img-2.png)
 
 ---
 
@@ -194,5 +215,3 @@ routes/
 ├── web.php                 # Web routes
 
 └── api.php                 # API routes
-```
-
