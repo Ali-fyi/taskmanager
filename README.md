@@ -151,7 +151,7 @@ Project view
 
 Task view
 
-### **API Demo Frontend**
+### **API**
 
 API 1API 2
 
