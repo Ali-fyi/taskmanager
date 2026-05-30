@@ -172,9 +172,9 @@ Endpoints available: `/api/projects` and `/api/tasks` (full CRUD, paginated).
 
 ### API
 
-![API 1](docs/Screenshots/api/img-1.png)
+![API 1](docs/Screenshots/api-detail/img-1.png)
 
-![API 2](docs/Screenshots/api/img-2.png)
+![API 2](docs/Screenshots/api-detail/img-2.png)
 
 ---
 
