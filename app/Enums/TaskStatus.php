@@ -11,14 +11,14 @@ enum TaskStatus: string
     public function label(): string
     {
         return match($this) {
-            self::Todo       => 'À faire',
-            self::InProgress => 'En cours',
-            self::Done       => 'Terminé',
+            self::Todo       => 'To do',
+            self::InProgress => 'In progress',
+            self::Done       => 'Done',
         };
     }
 
     /**
-     * Classe Tailwind pour le badge de statut.
+     * Tailwind class for the status badge.
      */
     public function badgeClass(): string
     {

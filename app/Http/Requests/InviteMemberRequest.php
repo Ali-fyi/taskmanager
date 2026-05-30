@@ -8,7 +8,7 @@ class InviteMemberRequest extends FormRequest
 {
     public function authorize(): bool
     {
-        // L'autorisation fine (owner only) est vérifiée dans le controller via Policy
+        // Fine-grained authorization (owner only) is checked in the controller via Policy
         return true;
     }
 
@@ -22,9 +22,9 @@ class InviteMemberRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'email.required' => 'L\'adresse email est requise.',
-            'email.email'    => 'L\'adresse email n\'est pas valide.',
-            'email.exists'   => 'Aucun compte n\'existe avec cette adresse email.',
+            'email.required' => 'The email address is required.',
+            'email.email'    => 'The email address is not valid.',
+            'email.exists'   => 'No account exists with this email address.',
         ];
     }
 }

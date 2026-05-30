@@ -12,8 +12,8 @@ use Illuminate\View\View;
 class StatusController extends Controller
 {
     /**
-     * Liste les statuts du workspace.
-     * Seuls les membres peuvent voir la liste.
+     * Lists the workspace's statuses.
+     * Only members can see the list.
      */
     public function index(Workspace $workspace): View
     {
@@ -25,8 +25,8 @@ class StatusController extends Controller
     }
 
     /**
-     * Affiche le formulaire de création d'un statut.
-     * Seul le propriétaire peut créer des statuts.
+     * Shows the status creation form.
+     * Only the owner can create statuses.
      */
     public function create(Workspace $workspace): View
     {
@@ -36,7 +36,7 @@ class StatusController extends Controller
     }
 
     /**
-     * Enregistre le nouveau statut.
+     * Stores the new status.
      */
     public function store(StoreStatusRequest $request, Workspace $workspace): RedirectResponse
     {
@@ -50,11 +50,11 @@ class StatusController extends Controller
 
         return redirect()
             ->route('workspaces.statuses.index', $workspace)
-            ->with('success', 'Statut créé.');
+            ->with('success', 'Status created.');
     }
 
     /**
-     * Affiche le formulaire d'édition d'un statut.
+     * Shows the status edit form.
      */
     public function edit(Workspace $workspace, Status $status): View
     {
@@ -64,7 +64,7 @@ class StatusController extends Controller
     }
 
     /**
-     * Met à jour le statut.
+     * Updates the status.
      */
     public function update(UpdateStatusRequest $request, Workspace $workspace, Status $status): RedirectResponse
     {
@@ -78,12 +78,12 @@ class StatusController extends Controller
 
         return redirect()
             ->route('workspaces.statuses.index', $workspace)
-            ->with('success', 'Statut mis à jour.');
+            ->with('success', 'Status updated.');
     }
 
     /**
-     * Supprime le statut.
-     * Les tâches liées auront leur status_id mis à null (nullOnDelete).
+     * Deletes the status.
+     * Linked tasks will have their status_id set to null (nullOnDelete).
      */
     public function destroy(Workspace $workspace, Status $status): RedirectResponse
     {
@@ -93,6 +93,6 @@ class StatusController extends Controller
 
         return redirect()
             ->route('workspaces.statuses.index', $workspace)
-            ->with('success', 'Statut supprimé. Les tâches associées n\'ont plus de statut.');
+            ->with('success', 'Status deleted. Associated tasks no longer have a status.');
     }
 }

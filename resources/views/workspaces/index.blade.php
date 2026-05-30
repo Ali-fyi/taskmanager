@@ -2,11 +2,11 @@
     <x-slot name="header">
         <div class="flex items-center justify-between">
             <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-                Mes workspaces
+                My workspaces
             </h2>
             <a href="{{ route('workspaces.create') }}"
                class="inline-flex items-center px-4 py-2 bg-gray-800 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-gray-700 transition ease-in-out duration-150">
-                + Nouveau workspace
+                + New workspace
             </a>
         </div>
     </x-slot>
@@ -14,7 +14,7 @@
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
 
-            {{-- Message flash --}}
+            {{-- Flash message --}}
             @if (session('success'))
                 <div class="mb-6 p-4 bg-green-50 border border-green-200 text-green-800 rounded-lg">
                     {{ session('success') }}
@@ -22,13 +22,13 @@
             @endif
 
             @if ($workspaces->isEmpty())
-                {{-- État vide --}}
+                {{-- Empty state --}}
                 <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                     <div class="p-12 text-center">
-                        <p class="text-gray-500 text-sm">Vous n'avez pas encore de workspace.</p>
+                        <p class="text-gray-500 text-sm">You don't have any workspace yet.</p>
                         <a href="{{ route('workspaces.create') }}"
                            class="mt-4 inline-flex items-center px-4 py-2 bg-gray-800 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-gray-700 transition ease-in-out duration-150">
-                            Créer mon premier workspace
+                            Create my first workspace
                         </a>
                     </div>
                 </div>
@@ -42,11 +42,11 @@
                                     <h3 class="font-semibold text-gray-900 truncate">
                                         {{ $workspace->name }}
                                     </h3>
-                                    {{-- Badge du rôle de l'utilisateur dans ce workspace --}}
+                                    {{-- User's role badge in this workspace --}}
                                     @php $role = $workspace->pivot->role; @endphp
                                     <span class="ml-2 shrink-0 inline-flex items-center px-2 py-0.5 rounded text-xs font-medium
                                         {{ $role === 'owner' ? 'bg-indigo-100 text-indigo-700' : 'bg-gray-100 text-gray-600' }}">
-                                        {{ $role === 'owner' ? 'Propriétaire' : 'Membre' }}
+                                        {{ $role === 'owner' ? 'Owner' : 'Member' }}
                                     </span>
                                 </div>
                                 @if ($workspace->description)

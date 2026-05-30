@@ -7,7 +7,7 @@ use Illuminate\Foundation\Http\FormRequest;
 class UpdateWorkspaceRequest extends FormRequest
 {
     /**
-     * L'autorisation est gérée dans le controller via la Policy.
+     * Authorization is handled in the controller via the Policy.
      */
     public function authorize(): bool
     {

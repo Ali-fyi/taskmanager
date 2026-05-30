@@ -8,7 +8,7 @@ use App\Models\User;
 class CommentPolicy
 {
     /**
-     * Seul l'auteur peut supprimer son commentaire.
+     * Only the author can delete their comment.
      */
     public function delete(User $user, Comment $comment): bool
     {

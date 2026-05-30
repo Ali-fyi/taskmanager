@@ -1,7 +1,7 @@
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            Tableau de bord
+            Dashboard
         </h2>
     </x-slot>
 
@@ -9,32 +9,32 @@
         <div class="max-w-5xl mx-auto sm:px-6 lg:px-8 space-y-6">
 
             {{-- Stats --}}
-            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                <div class="bg-white shadow-sm sm:rounded-lg p-6 text-center">
-                    <p class="text-3xl font-bold text-gray-800">{{ $stats['workspaces'] }}</p>
-                    <p class="mt-1 text-sm text-gray-500">Workspace{{ $stats['workspaces'] > 1 ? 's' : '' }}</p>
+            <div class="flex items-stretch gap-4">
+                <div class="flex-1 flex items-baseline justify-center gap-2 bg-white shadow-sm rounded-lg px-5 py-4">
+                    <span class="text-2xl font-bold text-gray-800">{{ $stats['workspaces'] }}</span>
+                    <span class="text-sm text-gray-500">Workspace{{ $stats['workspaces'] > 1 ? 's' : '' }}</span>
                 </div>
-                <div class="bg-white shadow-sm sm:rounded-lg p-6 text-center">
-                    <p class="text-3xl font-bold text-indigo-600">{{ $stats['assigned'] }}</p>
-                    <p class="mt-1 text-sm text-gray-500">Tâche{{ $stats['assigned'] > 1 ? 's' : '' }} assignée{{ $stats['assigned'] > 1 ? 's' : '' }}</p>
+                <div class="flex-1 flex items-baseline justify-center gap-2 bg-white shadow-sm rounded-lg px-5 py-4">
+                    <span class="text-2xl font-bold text-indigo-600">{{ $stats['assigned'] }}</span>
+                    <span class="text-sm text-gray-500">Assigned task{{ $stats['assigned'] > 1 ? 's' : '' }}</span>
                 </div>
-                <div class="bg-white shadow-sm sm:rounded-lg p-6 text-center">
-                    <p class="text-3xl font-bold {{ $stats['overdue'] > 0 ? 'text-red-500' : 'text-gray-800' }}">
+                <div class="flex-1 flex items-baseline justify-center gap-2 bg-white shadow-sm rounded-lg px-5 py-4">
+                    <span class="text-2xl font-bold {{ $stats['overdue'] > 0 ? 'text-red-500' : 'text-gray-800' }}">
                         {{ $stats['overdue'] }}
-                    </p>
-                    <p class="mt-1 text-sm text-gray-500">En retard</p>
+                    </span>
+                    <span class="text-sm text-gray-500">Overdue</span>
                 </div>
             </div>
 
-            {{-- Mes tâches --}}
+            {{-- My tasks --}}
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6">
                     <h3 class="text-sm font-medium text-gray-500 uppercase tracking-wide mb-4">
-                        Mes tâches
+                        My tasks
                     </h3>
 
                     @if ($myTasks->isEmpty())
-                        <p class="text-sm text-gray-400">Aucune tâche ne vous est assignée.</p>
+                        <p class="text-sm text-gray-400">No task is assigned to you.</p>
                     @else
                         <ul class="divide-y divide-gray-100">
                             @foreach ($myTasks as $task)

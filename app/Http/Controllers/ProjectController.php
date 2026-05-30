@@ -13,8 +13,8 @@ use Illuminate\View\View;
 class ProjectController extends Controller
 {
     /**
-     * Affiche le formulaire de création d'un projet.
-     * Seuls les membres du workspace peuvent créer un projet.
+     * Shows the project creation form.
+     * Only workspace members can create a project.
      */
     public function create(Workspace $workspace): View
     {
@@ -24,7 +24,7 @@ class ProjectController extends Controller
     }
 
     /**
-     * Enregistre le nouveau projet dans le workspace.
+     * Stores the new project in the workspace.
      */
     public function store(StoreProjectRequest $request, Workspace $workspace): RedirectResponse
     {
@@ -38,12 +38,12 @@ class ProjectController extends Controller
 
         return redirect()
             ->route('workspaces.projects.show', [$workspace, $project])
-            ->with('success', 'Projet créé avec succès.');
+            ->with('success', 'Project created successfully.');
     }
 
     /**
-     * Affiche un projet et ses informations.
-     * Scoped binding : Laravel vérifie que le projet appartient bien au workspace.
+     * Shows a project and its information.
+     * Scoped binding: Laravel checks that the project belongs to the workspace.
      */
     public function show(Request $request, Workspace $workspace, Project $project): View
     {
@@ -51,17 +51,17 @@ class ProjectController extends Controller
 
         $query = $project->tasks()->with(['assignee', 'status']);
 
-        // Filtre par statut
+        // Filter by status
         if ($request->filled('status_id')) {
             $query->where('status_id', $request->status_id);
         }
 
-        // Filtre par membre assigné
+        // Filter by assigned member
         if ($request->filled('assigned_to')) {
             $query->where('assigned_to', $request->assigned_to);
         }
 
-        // Recherche par titre
+        // Search by title
         if ($request->filled('search')) {
             $query->where('title', 'like', '%' . $request->search . '%');
         }
@@ -74,7 +74,7 @@ class ProjectController extends Controller
     }
 
     /**
-     * Affiche le formulaire d'édition d'un projet.
+     * Shows the project edit form.
      */
     public function edit(Workspace $workspace, Project $project): View
     {
@@ -84,7 +84,7 @@ class ProjectController extends Controller
     }
 
     /**
-     * Met à jour le projet.
+     * Updates the project.
      */
     public function update(UpdateProjectRequest $request, Workspace $workspace, Project $project): RedirectResponse
     {
@@ -98,12 +98,12 @@ class ProjectController extends Controller
 
         return redirect()
             ->route('workspaces.projects.show', [$workspace, $project])
-            ->with('success', 'Projet mis à jour.');
+            ->with('success', 'Project updated.');
     }
 
     /**
-     * Supprime le projet.
-     * La cascade en base supprimera les tâches associées (Phase 4).
+     * Deletes the project.
+     * The database cascade will remove the associated tasks (Phase 4).
      */
     public function destroy(Workspace $workspace, Project $project): RedirectResponse
     {
@@ -113,6 +113,6 @@ class ProjectController extends Controller
 
         return redirect()
             ->route('workspaces.show', $workspace)
-            ->with('success', 'Projet supprimé.');
+            ->with('success', 'Project deleted.');
     }
 }

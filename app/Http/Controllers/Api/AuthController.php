@@ -12,7 +12,7 @@ use Illuminate\Validation\ValidationException;
 class AuthController extends Controller
 {
     /**
-     * Authentifie l'utilisateur et retourne un token Sanctum.
+     * Authenticates the user and returns a Sanctum token.
      */
     public function login(Request $request): JsonResponse
     {
@@ -23,7 +23,7 @@ class AuthController extends Controller
 
         if (! Auth::attempt($credentials)) {
             throw ValidationException::withMessages([
-                'email' => ['Identifiants invalides.'],
+                'email' => ['Invalid credentials.'],
             ]);
         }
 
@@ -37,12 +37,12 @@ class AuthController extends Controller
     }
 
     /**
-     * Révoque le token courant (logout).
+     * Revokes the current token (logout).
      */
     public function logout(Request $request): JsonResponse
     {
         $request->user()->currentAccessToken()->delete();
 
-        return response()->json(['message' => 'Déconnecté avec succès.']);
+        return response()->json(['message' => 'Logged out successfully.']);
     }
 }

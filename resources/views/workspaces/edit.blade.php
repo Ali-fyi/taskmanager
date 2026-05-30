@@ -1,14 +1,14 @@
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            Modifier : {{ $workspace->name }}
+            Edit: {{ $workspace->name }}
         </h2>
     </x-slot>
 
     <div class="py-12">
         <div class="max-w-2xl mx-auto sm:px-6 lg:px-8 space-y-6">
 
-            {{-- Formulaire de modification --}}
+            {{-- Edit form --}}
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 sm:p-8">
 
@@ -16,9 +16,9 @@
                         @csrf
                         @method('PATCH')
 
-                        {{-- Nom --}}
+                        {{-- Name --}}
                         <div>
-                            <x-input-label for="name" value="Nom du workspace" />
+                            <x-input-label for="name" value="Workspace name" />
                             <x-text-input
                                 id="name"
                                 name="name"
@@ -32,7 +32,7 @@
 
                         {{-- Description --}}
                         <div class="mt-6">
-                            <x-input-label for="description" value="Description (optionnelle)" />
+                            <x-input-label for="description" value="Description (optional)" />
                             <textarea
                                 id="description"
                                 name="description"
@@ -43,10 +43,10 @@
                         </div>
 
                         <div class="mt-6 flex items-center gap-4">
-                            <x-primary-button>Enregistrer</x-primary-button>
+                            <x-primary-button>Save</x-primary-button>
                             <a href="{{ route('workspaces.show', $workspace) }}"
                                class="text-sm text-gray-600 hover:text-gray-900 underline">
-                                Annuler
+                                Cancel
                             </a>
                         </div>
                     </form>

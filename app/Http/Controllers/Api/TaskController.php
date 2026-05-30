@@ -14,7 +14,7 @@ use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 class TaskController extends Controller
 {
     /**
-     * Liste paginée des tâches dans les workspaces de l'utilisateur.
+     * Paginated list of tasks in the user's workspaces.
      */
     public function index(): AnonymousResourceCollection
     {
@@ -31,7 +31,7 @@ class TaskController extends Controller
     }
 
     /**
-     * Affiche une tâche.
+     * Shows a task.
      */
     public function show(Task $task): TaskResource
     {
@@ -43,25 +43,25 @@ class TaskController extends Controller
     }
 
     /**
-     * Crée une tâche dans le projet spécifié.
+     * Creates a task in the specified project.
      */
     public function store(StoreTaskRequest $request): JsonResponse
     {
         $project = Project::findOrFail($request->project_id);
 
-        // Vérifier que l'utilisateur est membre du workspace du projet
+        // Check that the user is a member of the project's workspace
         $this->authorize('view', $project);
 
         $task = $project->tasks()->create($request->validated());
 
         return response()->json([
-            'message' => 'Tâche créée avec succès.',
+            'message' => 'Task created successfully.',
             'data'    => new TaskResource($task->load(['status', 'assignee', 'project'])),
         ], 201);
     }
 
     /**
-     * Met à jour une tâche.
+     * Updates a task.
      */
     public function update(UpdateTaskRequest $request, Task $task): JsonResponse
     {
@@ -70,13 +70,13 @@ class TaskController extends Controller
         $task->update($request->validated());
 
         return response()->json([
-            'message' => 'Tâche mise à jour.',
+            'message' => 'Task updated.',
             'data'    => new TaskResource($task->load(['status', 'assignee', 'project'])),
         ]);
     }
 
     /**
-     * Supprime une tâche.
+     * Deletes a task.
      */
     public function destroy(Task $task): JsonResponse
     {
@@ -84,6 +84,6 @@ class TaskController extends Controller
 
         $task->delete();
 
-        return response()->json(['message' => 'Tâche supprimée.'], 200);
+        return response()->json(['message' => 'Task deleted.'], 200);
     }
 }

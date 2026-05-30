@@ -1,9 +1,9 @@
 /**
- * app.js — Logique API partagée entre toutes les pages
+ * app.js — Shared API logic across all pages
  *
- * Utilisation dans une page :
+ * Usage in a page:
  *   <script src="app.js"></script>
- *   puis : requireAuth(), api.tasks(), api.createTask({…}), etc.
+ *   then: requireAuth(), api.tasks(), api.createTask({…}), etc.
  */
 
 const API_BASE  = 'http://taskmanager.test/api';
@@ -18,8 +18,8 @@ function getUser()     { try { return JSON.parse(localStorage.getItem(USER_KEY))
 function setUser(u)    { localStorage.setItem(USER_KEY, JSON.stringify(u)); }
 
 /**
- * Redirige vers login.html si pas de token.
- * À appeler en haut de chaque page protégée.
+ * Redirects to login.html if there is no token.
+ * Call at the top of every protected page.
  */
 function requireAuth() {
     if (!getToken()) {
@@ -30,9 +30,9 @@ function requireAuth() {
 }
 
 /**
- * Wrapper fetch central.
- * Ajoute automatiquement le Bearer token.
- * Redirige vers login.html en cas de 401.
+ * Central fetch wrapper.
+ * Automatically adds the Bearer token.
+ * Redirects to login.html on a 401.
  */
 async function apiFetch(method, path, body = null) {
     const headers = {
@@ -50,14 +50,14 @@ async function apiFetch(method, path, body = null) {
     try {
         res = await fetch(API_BASE + path, options);
     } catch (err) {
-        throw new Error('Impossible de contacter l\'API. Vérifiez que taskmanager.test est accessible.');
+        throw new Error('Unable to reach the API. Check that taskmanager.test is accessible.');
     }
 
-    // Token expiré ou révoqué → redirect login
+    // Token expired or revoked → redirect to login
     if (res.status === 401) {
         removeToken();
         window.location.href = 'login.html';
-        throw new Error('Session expirée.');
+        throw new Error('Session expired.');
     }
 
     const text = await res.text();
@@ -79,9 +79,9 @@ const api = {
     projects:   ()                => apiFetch('GET',  '/projects'),
 };
 
-// ── Helpers UI ────────────────────────────────────────────────────
+// ── UI helpers ────────────────────────────────────────────────────
 
-/** Affiche un message d'erreur dans un élément (le vide si msg est vide). */
+/** Displays an error message in an element (clears it if msg is empty). */
 function showError(elId, msg) {
     const el = document.getElementById(elId);
     if (!el) return;
@@ -89,14 +89,14 @@ function showError(elId, msg) {
     el.classList.toggle('hidden', !msg);
 }
 
-/** Formate une date ISO en dd/mm/yyyy. */
+/** Formats an ISO date as dd/mm/yyyy. */
 function formatDate(iso) {
     if (!iso) return null;
     const [y, m, d] = iso.split('-');
     return d + '/' + m + '/' + y;
 }
 
-/** Renvoie true si la date (string yyyy-mm-dd) est passée. */
+/** Returns true if the date (string yyyy-mm-dd) is in the past. */
 function isOverdue(iso) {
     if (!iso) return false;
     return new Date(iso) < new Date(new Date().toDateString());

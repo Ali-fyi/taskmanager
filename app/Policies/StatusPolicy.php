@@ -8,7 +8,7 @@ use App\Models\User;
 class StatusPolicy
 {
     /**
-     * Seul le propriétaire du workspace peut gérer les statuts.
+     * Only the workspace owner can manage statuses.
      */
     private function isOwner(User $user, Status $status): bool
     {

@@ -8,7 +8,7 @@ use App\Models\User;
 class TaskPolicy
 {
     /**
-     * N'importe quel membre du workspace parent peut voir et modifier les tâches.
+     * Any member of the parent workspace can view and edit tasks.
      */
     private function isMember(User $user, Task $task): bool
     {

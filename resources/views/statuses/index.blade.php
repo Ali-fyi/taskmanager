@@ -4,12 +4,12 @@
             <div class="flex items-center gap-2 text-sm text-gray-500">
                 <a href="{{ route('workspaces.show', $workspace) }}" class="hover:text-gray-700">{{ $workspace->name }}</a>
                 <span>/</span>
-                <span class="text-gray-800 font-medium">Statuts</span>
+                <span class="text-gray-800 font-medium">Statuses</span>
             </div>
             @can('update', $workspace)
                 <a href="{{ route('workspaces.statuses.create', $workspace) }}"
                    class="inline-flex items-center px-4 py-2 bg-gray-800 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-gray-700 transition ease-in-out duration-150">
-                    + Nouveau statut
+                    + New status
                 </a>
             @endcan
         </div>
@@ -27,7 +27,7 @@
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6">
                     @if ($statuses->isEmpty())
-                        <p class="text-sm text-gray-500">Aucun statut défini.</p>
+                        <p class="text-sm text-gray-500">No status defined.</p>
                     @else
                         <ul class="divide-y divide-gray-100">
                             @foreach ($statuses as $status)
@@ -44,16 +44,16 @@
                                         <div class="flex items-center gap-3">
                                             <a href="{{ route('workspaces.statuses.edit', [$workspace, $status]) }}"
                                                class="text-xs text-gray-500 hover:text-gray-800 underline">
-                                                Modifier
+                                                Edit
                                             </a>
                                             <form method="POST"
                                                   action="{{ route('workspaces.statuses.destroy', [$workspace, $status]) }}"
-                                                  onsubmit="return confirm('Supprimer ce statut ? Les tâches associées n\'auront plus de statut.')">
+                                                  onsubmit="return confirm('Delete this status? Associated tasks will no longer have a status.')">
                                                 @csrf
                                                 @method('DELETE')
                                                 <button type="submit"
                                                         class="text-xs text-red-500 hover:text-red-700 underline">
-                                                    Supprimer
+                                                    Delete
                                                 </button>
                                             </form>
                                         </div>

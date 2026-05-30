@@ -11,7 +11,7 @@
             @can('update', $task)
                 <a href="{{ route('tasks.edit', $task) }}"
                    class="inline-flex items-center px-4 py-2 bg-white border border-gray-300 rounded-md font-semibold text-xs text-gray-700 uppercase tracking-widest hover:bg-gray-50 transition ease-in-out duration-150">
-                    Modifier
+                    Edit
                 </a>
             @endcan
         </div>
@@ -29,7 +29,7 @@
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 space-y-4">
 
-                    {{-- Statut --}}
+                    {{-- Status --}}
                     <div class="flex items-center gap-3">
                         @if ($task->status)
                             <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded text-xs font-medium"
@@ -39,12 +39,12 @@
                             </span>
                         @else
                             <span class="inline-flex items-center px-2.5 py-0.5 rounded text-xs font-medium bg-gray-100 text-gray-500">
-                                Sans statut
+                                No status
                             </span>
                         @endif
                         @if ($task->due_date)
                             <span class="text-xs {{ $task->due_date->isPast() ? 'text-red-500 font-medium' : 'text-gray-400' }}">
-                                Échéance : {{ $task->due_date->format('d/m/Y') }}
+                                Due: {{ $task->due_date->format('d/m/Y') }}
                             </span>
                         @endif
                     </div>
@@ -53,29 +53,29 @@
                     <div>
                         <h3 class="text-xs font-medium text-gray-500 uppercase tracking-wide">Description</h3>
                         <p class="mt-1 text-gray-900 text-sm whitespace-pre-line">
-                            {{ $task->description ?? 'Aucune description.' }}
+                            {{ $task->description ?? 'No description.' }}
                         </p>
                     </div>
 
-                    {{-- Assigné --}}
+                    {{-- Assignee --}}
                     <div>
-                        <h3 class="text-xs font-medium text-gray-500 uppercase tracking-wide">Assigné à</h3>
+                        <h3 class="text-xs font-medium text-gray-500 uppercase tracking-wide">Assigned to</h3>
                         <p class="mt-1 text-sm text-gray-900">
-                            {{ $task->assignee?->name ?? 'Personne' }}
+                            {{ $task->assignee?->name ?? 'Nobody' }}
                         </p>
                     </div>
 
                 </div>
             </div>
 
-            {{-- Commentaires --}}
+            {{-- Comments --}}
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6">
                     <h3 class="text-sm font-medium text-gray-500 uppercase tracking-wide mb-4">
-                        Commentaires ({{ $task->comments->count() }})
+                        Comments ({{ $task->comments->count() }})
                     </h3>
 
-                    {{-- Liste des commentaires --}}
+                    {{-- Comments list --}}
                     @if ($task->comments->isNotEmpty())
                         <ul class="space-y-4 mb-6">
                             @foreach ($task->comments as $comment)
@@ -93,7 +93,7 @@
                                     </div>
                                     @can('delete', $comment)
                                         <form method="POST" action="{{ route('comments.destroy', $comment) }}"
-                                              onsubmit="return confirm('Supprimer ce commentaire ?')">
+                                              onsubmit="return confirm('Delete this comment?')">
                                             @csrf
                                             @method('DELETE')
                                             <button type="submit"
@@ -106,36 +106,36 @@
                             @endforeach
                         </ul>
                     @else
-                        <p class="text-sm text-gray-400 mb-6">Aucun commentaire pour l'instant.</p>
+                        <p class="text-sm text-gray-400 mb-6">No comment yet.</p>
                     @endif
 
-                    {{-- Formulaire d'ajout --}}
+                    {{-- Add comment form --}}
                     <form method="POST" action="{{ route('tasks.comments.store', $task) }}">
                         @csrf
                         <textarea
                             name="body"
                             rows="3"
-                            placeholder="Ajouter un commentaire..."
+                            placeholder="Add a comment..."
                             class="block w-full border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm text-sm"
                         >{{ old('body') }}</textarea>
                         <x-input-error :messages="$errors->get('body')" class="mt-2" />
                         <div class="mt-3 flex justify-end">
-                            <x-primary-button>Commenter</x-primary-button>
+                            <x-primary-button>Comment</x-primary-button>
                         </div>
                     </form>
                 </div>
             </div>
 
-            {{-- Zone danger --}}
+            {{-- Danger zone --}}
             @can('delete', $task)
                 <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg border border-red-200">
                     <div class="p-6">
-                        <h3 class="text-sm font-medium text-red-600 uppercase tracking-wide">Zone de danger</h3>
+                        <h3 class="text-sm font-medium text-red-600 uppercase tracking-wide">Danger zone</h3>
                         <form method="POST" action="{{ route('tasks.destroy', $task) }}"
-                              onsubmit="return confirm('Supprimer cette tâche ?')">
+                              onsubmit="return confirm('Delete this task?')">
                             @csrf
                             @method('DELETE')
-                            <x-danger-button class="mt-4">Supprimer la tâche</x-danger-button>
+                            <x-danger-button class="mt-4">Delete task</x-danger-button>
                         </form>
                     </div>
                 </div>

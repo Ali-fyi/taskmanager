@@ -13,7 +13,7 @@ use Illuminate\View\View;
 class TaskController extends Controller
 {
     /**
-     * Affiche le formulaire de création d'une tâche.
+     * Shows the task creation form.
      */
     public function create(Workspace $workspace, Project $project): View
     {
@@ -26,7 +26,7 @@ class TaskController extends Controller
     }
 
     /**
-     * Enregistre la nouvelle tâche dans le projet.
+     * Stores the new task in the project.
      */
     public function store(StoreTaskRequest $request, Workspace $workspace, Project $project): RedirectResponse
     {
@@ -42,12 +42,12 @@ class TaskController extends Controller
 
         return redirect()
             ->route('workspaces.projects.show', [$workspace, $project])
-            ->with('success', 'Tâche créée avec succès.');
+            ->with('success', 'Task created successfully.');
     }
 
     /**
-     * Affiche le détail d'une tâche.
-     * Route shallow : on remonte workspace/project depuis la tâche.
+     * Shows a task's details.
+     * Shallow route: workspace/project are resolved from the task.
      */
     public function show(Task $task): View
     {
@@ -62,7 +62,7 @@ class TaskController extends Controller
     }
 
     /**
-     * Affiche le formulaire d'édition d'une tâche.
+     * Shows the task edit form.
      */
     public function edit(Task $task): View
     {
@@ -77,7 +77,7 @@ class TaskController extends Controller
     }
 
     /**
-     * Met à jour la tâche.
+     * Updates the task.
      */
     public function update(UpdateTaskRequest $request, Task $task): RedirectResponse
     {
@@ -96,11 +96,11 @@ class TaskController extends Controller
 
         return redirect()
             ->route('workspaces.projects.show', [$workspace, $project])
-            ->with('success', 'Tâche mise à jour.');
+            ->with('success', 'Task updated.');
     }
 
     /**
-     * Supprime la tâche.
+     * Deletes the task.
      */
     public function destroy(Task $task): RedirectResponse
     {
@@ -113,6 +113,6 @@ class TaskController extends Controller
 
         return redirect()
             ->route('workspaces.projects.show', [$workspace, $project])
-            ->with('success', 'Tâche supprimée.');
+            ->with('success', 'Task deleted.');
     }
 }

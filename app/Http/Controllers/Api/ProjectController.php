@@ -14,7 +14,7 @@ use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 class ProjectController extends Controller
 {
     /**
-     * Liste paginée des projets appartenant aux workspaces de l'utilisateur.
+     * Paginated list of projects belonging to the user's workspaces.
      */
     public function index(): AnonymousResourceCollection
     {
@@ -29,7 +29,7 @@ class ProjectController extends Controller
     }
 
     /**
-     * Affiche un projet et ses tâches.
+     * Shows a project and its tasks.
      */
     public function show(Project $project): ProjectResource
     {
@@ -41,13 +41,13 @@ class ProjectController extends Controller
     }
 
     /**
-     * Crée un projet dans le workspace spécifié.
+     * Creates a project in the specified workspace.
      */
     public function store(StoreProjectRequest $request): JsonResponse
     {
         $workspace = Workspace::findOrFail($request->workspace_id);
 
-        // Vérifier que l'utilisateur est membre du workspace
+        // Check that the user is a member of the workspace
         $this->authorize('view', $workspace);
 
         $project = $workspace->projects()->create([
@@ -57,13 +57,13 @@ class ProjectController extends Controller
         ]);
 
         return response()->json([
-            'message' => 'Projet créé avec succès.',
+            'message' => 'Project created successfully.',
             'data'    => new ProjectResource($project->load('workspace')),
         ], 201);
     }
 
     /**
-     * Met à jour un projet.
+     * Updates a project.
      */
     public function update(UpdateProjectRequest $request, Project $project): JsonResponse
     {
@@ -76,13 +76,13 @@ class ProjectController extends Controller
         ]);
 
         return response()->json([
-            'message' => 'Projet mis à jour.',
+            'message' => 'Project updated.',
             'data'    => new ProjectResource($project->load('workspace')),
         ]);
     }
 
     /**
-     * Supprime un projet.
+     * Deletes a project.
      */
     public function destroy(Project $project): JsonResponse
     {
@@ -90,6 +90,6 @@ class ProjectController extends Controller
 
         $project->delete();
 
-        return response()->json(['message' => 'Projet supprimé.'], 200);
+        return response()->json(['message' => 'Project deleted.'], 200);
     }
 }

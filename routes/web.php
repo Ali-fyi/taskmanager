@@ -25,8 +25,8 @@ Route::middleware('auth')->group(function () {
 
     Route::resource('workspaces', WorkspaceController::class);
 
-    // POST   /workspaces/{workspace}/members         → inviter un membre
-    // DELETE /workspaces/{workspace}/members/{user}  → retirer un membre
+    // POST   /workspaces/{workspace}/members         → invite a member
+    // DELETE /workspaces/{workspace}/members/{user}  → remove a member
     Route::post('workspaces/{workspace}/members', [WorkspaceMemberController::class, 'store'])
         ->name('workspaces.members.store');
     Route::delete('workspaces/{workspace}/members/{user}', [WorkspaceMemberController::class, 'destroy'])

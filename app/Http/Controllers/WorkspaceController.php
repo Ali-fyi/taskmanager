@@ -14,7 +14,7 @@ use Spatie\Activitylog\Models\Activity;
 class WorkspaceController extends Controller
 {
     /**
-     * Liste tous les workspaces dont l'utilisateur est membre.
+     * Lists all workspaces the user is a member of.
      */
     public function index(): View
     {
@@ -27,7 +27,7 @@ class WorkspaceController extends Controller
     }
 
     /**
-     * Affiche le formulaire de création.
+     * Shows the creation form.
      */
     public function create(): View
     {
@@ -35,7 +35,7 @@ class WorkspaceController extends Controller
     }
 
     /**
-     * Enregistre le nouveau workspace.
+     * Stores the new workspace.
      */
     public function store(StoreWorkspaceRequest $request): RedirectResponse
     {
@@ -45,24 +45,24 @@ class WorkspaceController extends Controller
             'owner_id'    => auth()->id(),
         ]);
 
-        // L'owner est aussi ajouté comme membre avec le rôle 'owner'
+        // The owner is also added as a member with the 'owner' role
         $workspace->members()->attach(auth()->id(), ['role' => 'owner']);
 
-        // Statuts par défaut créés automatiquement pour chaque nouveau workspace
+        // Default statuses automatically created for each new workspace
         $workspace->statuses()->createMany([
-            ['name' => 'À faire',  'color' => '#6366f1', 'position' => 1],
-            ['name' => 'En cours', 'color' => '#f59e0b', 'position' => 2],
-            ['name' => 'Terminé',  'color' => '#10b981', 'position' => 3],
+            ['name' => 'To do',       'color' => '#6366f1', 'position' => 1],
+            ['name' => 'In progress', 'color' => '#f59e0b', 'position' => 2],
+            ['name' => 'Done',        'color' => '#10b981', 'position' => 3],
         ]);
 
         return redirect()
             ->route('workspaces.show', $workspace)
-            ->with('success', 'Workspace créé avec succès.');
+            ->with('success', 'Workspace created successfully.');
     }
 
     /**
-     * Affiche un workspace, ses membres, ses projets et l'activité récente.
-     * Seuls les membres peuvent accéder à cette page.
+     * Shows a workspace, its members, its projects and recent activity.
+     * Only members can access this page.
      */
     public function show(Workspace $workspace): View
     {
@@ -70,7 +70,7 @@ class WorkspaceController extends Controller
 
         $workspace->load('members', 'owner', 'projects');
 
-        // Récupère les 20 dernières actions sur les projets et tâches de ce workspace
+        // Retrieves the 20 most recent actions on this workspace's projects and tasks
         $projectIds = $workspace->projects->pluck('id');
         $taskIds    = $projectIds->isNotEmpty()
             ? Task::whereIn('project_id', $projectIds)->pluck('id')
@@ -102,8 +102,8 @@ class WorkspaceController extends Controller
     }
 
     /**
-     * Affiche le formulaire d'édition.
-     * Seul le propriétaire peut modifier le workspace.
+     * Shows the edit form.
+     * Only the owner can edit the workspace.
      */
     public function edit(Workspace $workspace): View
     {
@@ -113,7 +113,7 @@ class WorkspaceController extends Controller
     }
 
     /**
-     * Met à jour le workspace.
+     * Updates the workspace.
      */
     public function update(UpdateWorkspaceRequest $request, Workspace $workspace): RedirectResponse
     {
@@ -126,12 +126,12 @@ class WorkspaceController extends Controller
 
         return redirect()
             ->route('workspaces.show', $workspace)
-            ->with('success', 'Workspace mis à jour.');
+            ->with('success', 'Workspace updated.');
     }
 
     /**
-     * Supprime le workspace.
-     * La cascade en base supprime automatiquement les membres associés.
+     * Deletes the workspace.
+     * The database cascade automatically removes the associated members.
      */
     public function destroy(Workspace $workspace): RedirectResponse
     {
@@ -141,6 +141,6 @@ class WorkspaceController extends Controller
 
         return redirect()
             ->route('workspaces.index')
-            ->with('success', 'Workspace supprimé.');
+            ->with('success', 'Workspace deleted.');
     }
 }

@@ -9,7 +9,7 @@
                 {{ $project->name }}
             </a>
             <span>/</span>
-            <span class="text-gray-800 font-medium">Modifier</span>
+            <span class="text-gray-800 font-medium">Edit</span>
         </div>
     </x-slot>
 
@@ -23,9 +23,9 @@
                         @csrf
                         @method('PATCH')
 
-                        {{-- Nom --}}
+                        {{-- Name --}}
                         <div>
-                            <x-input-label for="name" value="Nom du projet" />
+                            <x-input-label for="name" value="Project name" />
                             <x-text-input
                                 id="name"
                                 name="name"
@@ -39,7 +39,7 @@
 
                         {{-- Description --}}
                         <div class="mt-6">
-                            <x-input-label for="description" value="Description (optionnelle)" />
+                            <x-input-label for="description" value="Description (optional)" />
                             <textarea
                                 id="description"
                                 name="description"
@@ -49,9 +49,9 @@
                             <x-input-error :messages="$errors->get('description')" class="mt-2" />
                         </div>
 
-                        {{-- Couleur --}}
+                        {{-- Color --}}
                         <div class="mt-6">
-                            <x-input-label for="color" value="Couleur d'accentuation" />
+                            <x-input-label for="color" value="Accent color" />
                             <div class="mt-1 flex items-center gap-3">
                                 <input
                                     type="color"
@@ -60,16 +60,16 @@
                                     value="{{ old('color', $project->color) }}"
                                     class="h-10 w-16 rounded-md border border-gray-300 cursor-pointer p-1"
                                 />
-                                <span class="text-sm text-gray-500">Couleur actuelle du projet.</span>
+                                <span class="text-sm text-gray-500">Current project color.</span>
                             </div>
                             <x-input-error :messages="$errors->get('color')" class="mt-2" />
                         </div>
 
                         <div class="mt-6 flex items-center gap-4">
-                            <x-primary-button>Enregistrer</x-primary-button>
+                            <x-primary-button>Save</x-primary-button>
                             <a href="{{ route('workspaces.projects.show', [$workspace, $project]) }}"
                                class="text-sm text-gray-600 hover:text-gray-900 underline">
-                                Annuler
+                                Cancel
                             </a>
                         </div>
                     </form>

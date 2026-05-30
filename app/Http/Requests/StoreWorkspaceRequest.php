@@ -8,7 +8,7 @@ class StoreWorkspaceRequest extends FormRequest
 {
     public function authorize(): bool
     {
-        return true; // n'importe quel user connecté peut créer un workspace
+        return true; // any authenticated user can create a workspace
     }
 
     public function rules(): array

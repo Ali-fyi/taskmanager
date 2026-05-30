@@ -27,8 +27,8 @@ class Comment extends Model
     public function getDescriptionForEvent(string $eventName): string
     {
         return match($eventName) {
-            'created' => 'Commentaire ajouté',
-            'deleted' => 'Commentaire supprimé',
+            'created' => 'Comment added',
+            'deleted' => 'Comment deleted',
             default   => $eventName,
         };
     }

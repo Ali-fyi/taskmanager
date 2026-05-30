@@ -9,9 +9,9 @@ use RuntimeException;
 class WorkspaceMemberService
 {
     /**
-     * Ajoute un utilisateur existant à un workspace via son email.
+     * Adds an existing user to a workspace via their email.
      *
-     * @throws RuntimeException Si l'utilisateur est déjà membre.
+     * @throws RuntimeException If the user is already a member.
      */
     public function addMemberByEmail(Workspace $workspace, string $email): User
     {
@@ -19,7 +19,7 @@ class WorkspaceMemberService
 
         if ($workspace->members()->where('user_id', $user->id)->exists()) {
             throw new RuntimeException(
-                "{$user->name} est déjà membre de ce workspace."
+                "{$user->name} is already a member of this workspace."
             );
         }
 
@@ -29,21 +29,21 @@ class WorkspaceMemberService
     }
 
     /**
-     * Retire un membre du workspace.
-     * L'owner ne peut pas se retirer lui-même.
+     * Removes a member from the workspace.
+     * The owner cannot remove themselves.
      *
-     * @throws RuntimeException Si le user est l'owner ou n'est pas membre.
+     * @throws RuntimeException If the user is the owner or is not a member.
      */
     public function removeMember(Workspace $workspace, User $user): void
     {
         if ($workspace->owner_id === $user->id) {
             throw new RuntimeException(
-                'Le propriétaire ne peut pas être retiré du workspace.'
+                'The owner cannot be removed from the workspace.'
             );
         }
 
         if (! $workspace->members()->where('user_id', $user->id)->exists()) {
-            throw new RuntimeException('Cet utilisateur n\'est pas membre de ce workspace.');
+            throw new RuntimeException('This user is not a member of this workspace.');
         }
 
         $workspace->members()->detach($user->id);

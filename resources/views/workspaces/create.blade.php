@@ -1,7 +1,7 @@
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            Nouveau workspace
+            New workspace
         </h2>
     </x-slot>
 
@@ -13,16 +13,16 @@
                     <form method="POST" action="{{ route('workspaces.store') }}">
                         @csrf
 
-                        {{-- Nom --}}
+                        {{-- Name --}}
                         <div>
-                            <x-input-label for="name" value="Nom du workspace" />
+                            <x-input-label for="name" value="Workspace name" />
                             <x-text-input
                                 id="name"
                                 name="name"
                                 type="text"
                                 class="mt-1 block w-full"
                                 :value="old('name')"
-                                placeholder="Ex : Mon équipe, Projet client..."
+                                placeholder="E.g. My team, Client project..."
                                 autofocus
                             />
                             <x-input-error :messages="$errors->get('name')" class="mt-2" />
@@ -30,22 +30,22 @@
 
                         {{-- Description --}}
                         <div class="mt-6">
-                            <x-input-label for="description" value="Description (optionnelle)" />
+                            <x-input-label for="description" value="Description (optional)" />
                             <textarea
                                 id="description"
                                 name="description"
                                 rows="3"
                                 class="mt-1 block w-full border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm"
-                                placeholder="Décrivez brièvement ce workspace..."
+                                placeholder="Briefly describe this workspace..."
                             >{{ old('description') }}</textarea>
                             <x-input-error :messages="$errors->get('description')" class="mt-2" />
                         </div>
 
                         <div class="mt-6 flex items-center gap-4">
-                            <x-primary-button>Créer le workspace</x-primary-button>
+                            <x-primary-button>Create workspace</x-primary-button>
                             <a href="{{ route('workspaces.index') }}"
                                class="text-sm text-gray-600 hover:text-gray-900 underline">
-                                Annuler
+                                Cancel
                             </a>
                         </div>
                     </form>

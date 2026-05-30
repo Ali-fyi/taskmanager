@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -14,7 +14,7 @@
             <span class="logo">✓ TaskManager</span>
             <div class="header-right">
                 <span id="user-badge" class="user-badge"></span>
-                <button id="btn-logout" class="btn btn-ghost btn-sm">Déconnexion</button>
+                <button id="btn-logout" class="btn btn-ghost btn-sm">Log out</button>
             </div>
         </div>
     </header>
@@ -23,31 +23,31 @@
     <main>
         <div class="container">
 
-            <!-- Nouvelle tâche -->
+            <!-- New task -->
             <section class="card">
-                <h2>Nouvelle tâche</h2>
+                <h2>New task</h2>
                 <div class="create-form">
-                    <select id="project-select" title="Projet">
-                        <option value="">Chargement…</option>
+                    <select id="project-select" title="Project">
+                        <option value="">Loading…</option>
                     </select>
-                    <input type="text" id="task-title" placeholder="Titre de la tâche…" maxlength="255">
-                    <button id="btn-create" class="btn btn-primary">+ Ajouter</button>
+                    <input type="text" id="task-title" placeholder="Task title…" maxlength="255">
+                    <button id="btn-create" class="btn btn-primary">+ Add</button>
                 </div>
                 <div id="create-error" class="error-msg hidden"></div>
             </section>
 
-            <!-- Liste des tâches -->
+            <!-- Task list -->
             <section>
                 <div class="list-header">
-                    <h2 id="task-count">Tâches</h2>
-                    <button id="btn-refresh" class="btn btn-ghost btn-sm">↻ Actualiser</button>
+                    <h2 id="task-count">Tasks</h2>
+                    <button id="btn-refresh" class="btn btn-ghost btn-sm">↻ Refresh</button>
                 </div>
 
                 <div id="loading" class="loading"></div>
                 <div id="task-list"></div>
                 <div id="empty" class="empty hidden">
-                    Aucune tâche ne vous est assignée pour l'instant.<br>
-                    <small style="color:var(--slate-300)">Créez-en une ci-dessus ou assignez-vous une tâche dans l'app web.</small>
+                    No task is assigned to you yet.<br>
+                    <small style="color:var(--slate-300)">Create one above or assign yourself a task in the web app.</small>
                 </div>
             </section>
 
@@ -56,12 +56,12 @@
 
     <script src="app.js"></script>
     <script>
-        // ── Garde : redirige si pas connecté ─────────────────
+        // ── Guard: redirect if not signed in ─────────────────
         requireAuth();
 
         // ── State ─────────────────────────────────────────────
         let allTasks    = [];
-        let allStatuses = []; // collectés depuis les tâches chargées
+        let allStatuses = []; // collected from the loaded tasks
 
         // ── Init ──────────────────────────────────────────────
         const user = getUser();
@@ -79,13 +79,13 @@
         // Refresh
         document.getElementById('btn-refresh').addEventListener('click', loadTasks);
 
-        // Créer tâche
+        // Create task
         document.getElementById('btn-create').addEventListener('click', createTask);
         document.getElementById('task-title').addEventListener('keydown', (e) => {
             if (e.key === 'Enter') createTask();
         });
 
-        // ── Charger les projets ────────────────────────────────
+        // ── Load projects ──────────────────────────────────────
         async function loadProjects() {
             const sel = document.getElementById('project-select');
             try {
@@ -93,20 +93,20 @@
                 if (!ok || !Array.isArray(data.data)) throw new Error();
 
                 if (data.data.length === 0) {
-                    sel.innerHTML = '<option value="">Aucun projet disponible</option>';
+                    sel.innerHTML = '<option value="">No project available</option>';
                     return;
                 }
 
-                sel.innerHTML = '<option value="">Choisir un projet…</option>'
+                sel.innerHTML = '<option value="">Choose a project…</option>'
                     + data.data.map(p =>
                         `<option value="${p.id}">${escHtml(p.name)}</option>`
                     ).join('');
             } catch {
-                sel.innerHTML = '<option value="">Impossible de charger les projets</option>';
+                sel.innerHTML = '<option value="">Unable to load projects</option>';
             }
         }
 
-        // ── Charger les tâches ─────────────────────────────────
+        // ── Load tasks ─────────────────────────────────────────
         async function loadTasks() {
             const listEl   = document.getElementById('task-list');
             const loadEl   = document.getElementById('loading');
@@ -116,17 +116,17 @@
             listEl.innerHTML = '';
             loadEl.classList.remove('hidden');
             emptyEl.classList.add('hidden');
-            countEl.textContent = 'Tâches';
+            countEl.textContent = 'Tasks';
 
             try {
                 const { ok, data } = await api.tasks();
                 loadEl.classList.add('hidden');
 
-                if (!ok) throw new Error(data.message || 'Erreur lors du chargement.');
+                if (!ok) throw new Error(data.message || 'Error while loading.');
 
                 allTasks = data.data || [];
 
-                // Collecter les statuts uniques depuis les tâches
+                // Collect unique statuses from the tasks
                 const statusMap = {};
                 allTasks.forEach(t => {
                     if (t.status && t.status.id) {
@@ -135,7 +135,7 @@
                 });
                 allStatuses = Object.values(statusMap).sort((a, b) => (a.position || 0) - (b.position || 0));
 
-                countEl.textContent = 'Tâches (' + allTasks.length + ')';
+                countEl.textContent = 'Tasks (' + allTasks.length + ')';
 
                 if (allTasks.length === 0) {
                     emptyEl.classList.remove('hidden');
@@ -150,7 +150,7 @@
             }
         }
 
-        // ── Rendu de la liste ──────────────────────────────────
+        // ── Render the list ────────────────────────────────────
         function renderTasks(tasks) {
             const listEl = document.getElementById('task-list');
 
@@ -170,14 +170,14 @@
                 // Status select
                 const statusSelect = buildStatusSelect(task.id, status);
 
-                // Footer (assigné + date)
+                // Footer (assignee + date)
                 const footerParts = [];
                 if (assignee) {
                     footerParts.push(`<span class="tag">👤 ${escHtml(assignee.name)}</span>`);
                 }
                 if (dueDate) {
                     const cls = overdue ? ' due-overdue' : '';
-                    footerParts.push(`<span class="tag${cls}">📅 ${formatDate(dueDate)}${overdue ? ' — En retard' : ''}</span>`);
+                    footerParts.push(`<span class="tag${cls}">📅 ${formatDate(dueDate)}${overdue ? ' — Overdue' : ''}</span>`);
                 }
 
                 return `
@@ -189,7 +189,7 @@
                         </div>
                         <div class="task-actions">
                             ${statusSelect}
-                            <button class="btn btn-danger btn-sm" onclick="deleteTask(${task.id})" title="Supprimer">✕</button>
+                            <button class="btn btn-danger btn-sm" onclick="deleteTask(${task.id})" title="Delete">✕</button>
                         </div>
                     </div>
                     ${footerParts.length
@@ -198,14 +198,14 @@
                 </div>`;
             }).join('');
 
-            // Appliquer la couleur de fond aux selects de statut
+            // Apply the background color to the status selects
             document.querySelectorAll('.status-select').forEach(applyStatusColor);
         }
 
-        // ── Status select par tâche ────────────────────────────
+        // ── Per-task status select ─────────────────────────────
         function buildStatusSelect(taskId, currentStatus) {
             const options = [
-                `<option value="" ${!currentStatus ? 'selected' : ''}>Sans statut</option>`,
+                `<option value="" ${!currentStatus ? 'selected' : ''}>No status</option>`,
                 ...allStatuses.map(s =>
                     `<option value="${s.id}" ${currentStatus?.id === s.id ? 'selected' : ''}>${escHtml(s.name)}</option>`
                 )
@@ -215,12 +215,12 @@
                 data-task-id="${taskId}"
                 data-color="${currentStatus?.color || ''}"
                 onchange="changeStatus(this)"
-                title="Changer le statut">
+                title="Change status">
                 ${options}
             </select>`;
         }
 
-        // Applique background + couleur inline sur le select
+        // Applies inline background + color on the select
         function applyStatusColor(sel) {
             const color = sel.dataset.color;
             if (color) {
@@ -232,7 +232,7 @@
             }
         }
 
-        // ── Changer le statut ──────────────────────────────────
+        // ── Change the status ──────────────────────────────────
         async function changeStatus(selectEl) {
             const taskId  = selectEl.dataset.taskId;
             const statusId = selectEl.value ? +selectEl.value : null;
@@ -240,27 +240,27 @@
             selectEl.disabled = true;
             try {
                 const { ok, data } = await api.updateTask(taskId, { status_id: statusId });
-                if (!ok) throw new Error(data.message || 'Erreur');
+                if (!ok) throw new Error(data.message || 'Error');
 
-                // Mettre à jour la couleur du select
+                // Update the select color
                 const newStatus = data.data?.status;
                 selectEl.dataset.color = newStatus?.color || '';
                 applyStatusColor(selectEl);
 
-                // Mettre à jour allStatuses si nouveau statut inconnu
+                // Update allStatuses if the new status is unknown
                 if (newStatus && !allStatuses.find(s => s.id === newStatus.id)) {
                     allStatuses.push(newStatus);
                 }
             } catch (err) {
-                alert('Erreur : ' + err.message);
-                // Recharger pour retrouver l'état correct
+                alert('Error: ' + err.message);
+                // Reload to restore the correct state
                 await loadTasks();
             } finally {
                 selectEl.disabled = false;
             }
         }
 
-        // ── Créer une tâche ────────────────────────────────────
+        // ── Create a task ──────────────────────────────────────
         async function createTask() {
             showError('create-error', '');
 
@@ -269,11 +269,11 @@
             const btn       = document.getElementById('btn-create');
 
             if (!projectId) {
-                showError('create-error', 'Sélectionnez un projet.');
+                showError('create-error', 'Select a project.');
                 return;
             }
             if (!title) {
-                showError('create-error', 'Le titre est requis.');
+                showError('create-error', 'The title is required.');
                 document.getElementById('task-title').focus();
                 return;
             }
@@ -288,7 +288,7 @@
                 });
 
                 if (!ok) {
-                    const msg = firstValidationError(data) || data.message || 'Erreur lors de la création.';
+                    const msg = firstValidationError(data) || data.message || 'Error while creating.';
                     showError('create-error', msg);
                     return;
                 }
@@ -300,31 +300,31 @@
                 showError('create-error', err.message);
             } finally {
                 btn.disabled    = false;
-                btn.textContent = '+ Ajouter';
+                btn.textContent = '+ Add';
             }
         }
 
-        // ── Supprimer une tâche ────────────────────────────────
+        // ── Delete a task ──────────────────────────────────────
         async function deleteTask(id) {
-            if (!confirm('Supprimer cette tâche ?')) return;
+            if (!confirm('Delete this task?')) return;
 
-            // Cacher la carte immédiatement (feedback rapide)
+            // Hide the card immediately (quick feedback)
             const card = document.querySelector(`.task-card[data-id="${id}"]`);
             if (card) card.style.opacity = '.4';
 
             try {
                 const { ok, data } = await api.deleteTask(id);
-                if (!ok) throw new Error(data.message || 'Erreur lors de la suppression.');
+                if (!ok) throw new Error(data.message || 'Error while deleting.');
                 await loadTasks();
             } catch (err) {
                 if (card) card.style.opacity = '1';
-                alert('Erreur : ' + err.message);
+                alert('Error: ' + err.message);
             }
         }
 
-        // ── Utilitaires ────────────────────────────────────────
+        // ── Utilities ──────────────────────────────────────────
 
-        /** Échappe les caractères HTML (contre injections XSS). */
+        /** Escapes HTML characters (against XSS injections). */
         function escHtml(str) {
             if (!str) return '';
             return String(str)
@@ -334,14 +334,14 @@
                 .replace(/"/g, '&quot;');
         }
 
-        /** Renvoie la première erreur de validation du payload Laravel. */
+        /** Returns the first validation error from the Laravel payload. */
         function firstValidationError(data) {
             if (!data.errors) return null;
             const first = Object.values(data.errors)[0];
             return Array.isArray(first) ? first[0] : first;
         }
 
-        // ── Lancement ─────────────────────────────────────────
+        // ── Startup ────────────────────────────────────────────
         loadProjects();
         loadTasks();
     </script>

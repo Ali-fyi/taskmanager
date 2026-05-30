@@ -30,9 +30,9 @@ class Project extends Model
     public function getDescriptionForEvent(string $eventName): string
     {
         return match($eventName) {
-            'created' => 'Projet créé',
-            'updated' => 'Projet modifié',
-            'deleted' => 'Projet supprimé',
+            'created' => 'Project created',
+            'updated' => 'Project updated',
+            'deleted' => 'Project deleted',
             default   => $eventName,
         };
     }

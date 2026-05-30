@@ -16,7 +16,7 @@
             @can('update', $project)
                 <a href="{{ route('workspaces.projects.edit', [$workspace, $project]) }}"
                    class="inline-flex items-center px-4 py-2 bg-white border border-gray-300 rounded-md font-semibold text-xs text-gray-700 uppercase tracking-widest hover:bg-gray-50 transition ease-in-out duration-150">
-                    Modifier
+                    Edit
                 </a>
             @endcan
         </div>
@@ -25,52 +25,52 @@
     <div class="py-12">
         <div class="max-w-4xl mx-auto sm:px-6 lg:px-8 space-y-6">
 
-            {{-- Message flash --}}
+            {{-- Flash message --}}
             @if (session('success'))
                 <div class="p-4 bg-green-50 border border-green-200 text-green-800 rounded-lg">
                     {{ session('success') }}
                 </div>
             @endif
 
-            {{-- Description du projet --}}
+            {{-- Project description --}}
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6">
                     <h3 class="text-sm font-medium text-gray-500 uppercase tracking-wide">Description</h3>
                     <p class="mt-2 text-gray-900">
-                        {{ $project->description ?? 'Aucune description.' }}
+                        {{ $project->description ?? 'No description.' }}
                     </p>
                 </div>
             </div>
 
-            {{-- Tâches groupées par statut --}}
+            {{-- Tasks grouped by status --}}
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6">
                     <div class="flex items-center justify-between mb-6">
                         <h3 class="text-sm font-medium text-gray-500 uppercase tracking-wide">
-                            Tâches ({{ $tasks->count() }})
+                            Tasks ({{ $tasks->count() }})
                         </h3>
                         <a href="{{ route('workspaces.projects.tasks.create', [$workspace, $project]) }}"
                            class="inline-flex items-center px-3 py-1.5 bg-gray-800 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-gray-700 transition ease-in-out duration-150">
-                            + Nouvelle tâche
+                            + New task
                         </a>
                     </div>
 
-                    {{-- Filtres --}}
+                    {{-- Filters --}}
                     <form method="GET" action="{{ route('workspaces.projects.show', [$workspace, $project]) }}"
                           class="mb-6 flex flex-wrap items-end gap-3">
 
                         <div class="flex-1 min-w-36">
-                            <label class="block text-xs text-gray-500 mb-1">Recherche</label>
+                            <label class="block text-xs text-gray-500 mb-1">Search</label>
                             <input type="text" name="search" value="{{ request('search') }}"
-                                   placeholder="Titre de la tâche..."
+                                   placeholder="Task title..."
                                    class="block w-full border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm text-sm" />
                         </div>
 
                         <div class="min-w-36">
-                            <label class="block text-xs text-gray-500 mb-1">Statut</label>
+                            <label class="block text-xs text-gray-500 mb-1">Status</label>
                             <select name="status_id"
                                     class="block w-full border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm text-sm">
-                                <option value="">Tous</option>
+                                <option value="">All</option>
                                 @foreach ($statuses as $status)
                                     <option value="{{ $status->id }}"
                                         {{ request('status_id') == $status->id ? 'selected' : '' }}>
@@ -81,10 +81,10 @@
                         </div>
 
                         <div class="min-w-36">
-                            <label class="block text-xs text-gray-500 mb-1">Assigné à</label>
+                            <label class="block text-xs text-gray-500 mb-1">Assigned to</label>
                             <select name="assigned_to"
                                     class="block w-full border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm text-sm">
-                                <option value="">Tous</option>
+                                <option value="">All</option>
                                 @foreach ($members as $member)
                                     <option value="{{ $member->id }}"
                                         {{ request('assigned_to') == $member->id ? 'selected' : '' }}>
@@ -97,35 +97,35 @@
                         <div class="flex gap-2">
                             <button type="submit"
                                     class="inline-flex items-center px-3 py-2 bg-gray-800 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-gray-700 transition ease-in-out duration-150">
-                                Filtrer
+                                Filter
                             </button>
                             @if (request()->hasAny(['search', 'status_id', 'assigned_to']))
                                 <a href="{{ route('workspaces.projects.show', [$workspace, $project]) }}"
                                    class="inline-flex items-center px-3 py-2 bg-white border border-gray-300 rounded-md font-semibold text-xs text-gray-700 uppercase tracking-widest hover:bg-gray-50 transition ease-in-out duration-150">
-                                    Réinitialiser
+                                    Reset
                                 </a>
                             @endif
                         </div>
                     </form>
 
                     @if ($tasks->isEmpty())
-                        <p class="text-sm text-gray-500">Aucune tâche pour l'instant.</p>
+                        <p class="text-sm text-gray-500">No task yet.</p>
                     @else
                         <div class="space-y-6">
-                            {{-- Tâches sans statut --}}
+                            {{-- Tasks without status --}}
                             @php $unsortedTasks = $tasks->whereNull('status_id'); @endphp
                             @if ($unsortedTasks->isNotEmpty())
                                 <div>
                                     <h4 class="text-xs font-semibold uppercase tracking-wide mb-2">
                                         <span class="inline-flex items-center px-2 py-0.5 rounded bg-gray-100 text-gray-500">
-                                            Sans statut
+                                            No status
                                         </span>
                                     </h4>
                                     @include('projects.partials.task-list', ['statusTasks' => $unsortedTasks])
                                 </div>
                             @endif
 
-                            {{-- Tâches groupées par statut du workspace --}}
+                            {{-- Tasks grouped by workspace status --}}
                             @foreach ($statuses as $status)
                                 @php $statusTasks = $tasks->where('status_id', $status->id); @endphp
                                 @if ($statusTasks->isNotEmpty())
@@ -146,21 +146,21 @@
                 </div>
             </div>
 
-            {{-- Zone danger --}}
+            {{-- Danger zone --}}
             @can('delete', $project)
                 <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg border border-red-200">
                     <div class="p-6">
-                        <h3 class="text-sm font-medium text-red-600 uppercase tracking-wide">Zone de danger</h3>
+                        <h3 class="text-sm font-medium text-red-600 uppercase tracking-wide">Danger zone</h3>
                         <p class="mt-2 text-sm text-gray-600">
-                            La suppression du projet est irréversible.
+                            Deleting the project is irreversible.
                         </p>
                         <form method="POST"
                               action="{{ route('workspaces.projects.destroy', [$workspace, $project]) }}"
-                              onsubmit="return confirm('Supprimer définitivement ce projet ?')">
+                              onsubmit="return confirm('Permanently delete this project?')">
                             @csrf
                             @method('DELETE')
                             <x-danger-button class="mt-4">
-                                Supprimer le projet
+                                Delete project
                             </x-danger-button>
                         </form>
                     </div>

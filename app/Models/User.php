@@ -20,7 +20,7 @@ class User extends Authenticatable
     use HasApiTokens, HasFactory, Notifiable;
 
     /**
-     * Tous les workspaces dont ce user est membre (y compris ceux qu'il a créés).
+     * All workspaces this user is a member of (including those they created).
      */
     public function workspaces(): BelongsToMany
     {

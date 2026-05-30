@@ -36,9 +36,9 @@ class Task extends Model
     public function getDescriptionForEvent(string $eventName): string
     {
         return match($eventName) {
-            'created' => 'Tâche créée',
-            'updated' => 'Tâche modifiée',
-            'deleted' => 'Tâche supprimée',
+            'created' => 'Task created',
+            'updated' => 'Task updated',
+            'deleted' => 'Task deleted',
             default   => $eventName,
         };
     }

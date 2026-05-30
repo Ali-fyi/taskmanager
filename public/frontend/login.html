@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Connexion — TaskManager</title>
+    <title>Sign in — TaskManager</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body class="login-page">
@@ -12,30 +12,30 @@
         <div class="brand">
             <div class="brand-icon">✓</div>
             <h1>TaskManager</h1>
-            <p>Connectez-vous pour accéder à vos tâches</p>
+            <p>Sign in to access your tasks</p>
         </div>
 
         <form id="login-form" novalidate>
             <div class="field">
                 <label for="email">Email</label>
-                <input type="email" id="email" placeholder="vous@exemple.com" autocomplete="email" required>
+                <input type="email" id="email" placeholder="you@example.com" autocomplete="email" required>
             </div>
             <div class="field">
-                <label for="password">Mot de passe</label>
+                <label for="password">Password</label>
                 <input type="password" id="password" placeholder="••••••••" autocomplete="current-password" required>
             </div>
 
             <div id="login-error" class="error-msg hidden"></div>
 
             <button type="submit" id="btn-submit" class="btn btn-primary submit-btn">
-                Se connecter
+                Sign in
             </button>
         </form>
     </div>
 
     <script src="app.js"></script>
     <script>
-        // Si déjà connecté, aller directement au dashboard
+        // If already signed in, go straight to the dashboard
         if (getToken()) {
             window.location.href = 'dashboard.html';
         }
@@ -49,12 +49,12 @@
             const btn      = document.getElementById('btn-submit');
 
             if (!email || !password) {
-                showError('login-error', 'Veuillez remplir tous les champs.');
+                showError('login-error', 'Please fill in all fields.');
                 return;
             }
 
             btn.disabled    = true;
-            btn.textContent = 'Connexion…';
+            btn.textContent = 'Signing in…';
 
             try {
                 const { ok, data } = await api.login(email, password);
@@ -66,18 +66,18 @@
                 } else {
                     const msg = data.errors?.email?.[0]
                         || data.message
-                        || 'Identifiants invalides.';
+                        || 'Invalid credentials.';
                     showError('login-error', msg);
                 }
             } catch (err) {
                 showError('login-error', err.message);
             } finally {
                 btn.disabled    = false;
-                btn.textContent = 'Se connecter';
+                btn.textContent = 'Sign in';
             }
         });
 
-        // Submit avec Entrée
+        // Submit with Enter
         document.getElementById('password').addEventListener('keydown', (e) => {
             if (e.key === 'Enter') document.getElementById('login-form').requestSubmit();
         });

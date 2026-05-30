@@ -10,12 +10,12 @@ use Illuminate\Http\RedirectResponse;
 class CommentController extends Controller
 {
     /**
-     * Ajoute un commentaire à une tâche.
-     * Seuls les membres du workspace peuvent commenter.
+     * Adds a comment to a task.
+     * Only workspace members can comment.
      */
     public function store(StoreCommentRequest $request, Task $task): RedirectResponse
     {
-        // On réutilise la TaskPolicy::view pour vérifier que l'user est membre du workspace
+        // Reuse TaskPolicy::view to verify the user is a member of the workspace
         $this->authorize('view', $task);
 
         $task->comments()->create([
@@ -25,12 +25,12 @@ class CommentController extends Controller
 
         return redirect()
             ->route('tasks.show', $task)
-            ->with('success', 'Commentaire ajouté.');
+            ->with('success', 'Comment added.');
     }
 
     /**
-     * Supprime un commentaire.
-     * Route shallow : seul l'auteur peut supprimer.
+     * Deletes a comment.
+     * Shallow route: only the author can delete.
      */
     public function destroy(Comment $comment): RedirectResponse
     {
@@ -41,6 +41,6 @@ class CommentController extends Controller
 
         return redirect()
             ->route('tasks.show', $task)
-            ->with('success', 'Commentaire supprimé.');
+            ->with('success', 'Comment deleted.');
     }
 }

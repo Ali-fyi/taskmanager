@@ -8,7 +8,7 @@ use App\Models\Workspace;
 class WorkspacePolicy
 {
     /**
-     * N'importe quel utilisateur authentifié peut créer un workspace.
+     * Any authenticated user can create a workspace.
      */
     public function create(User $user): bool
     {
@@ -16,7 +16,7 @@ class WorkspacePolicy
     }
 
     /**
-     * Seuls les membres du workspace peuvent le consulter.
+     * Only workspace members can view it.
      */
     public function view(User $user, Workspace $workspace): bool
     {
@@ -24,7 +24,7 @@ class WorkspacePolicy
     }
 
     /**
-     * Seul le propriétaire peut inviter / retirer des membres.
+     * Only the owner can invite / remove members.
      */
     public function manageMembers(User $user, Workspace $workspace): bool
     {
@@ -32,7 +32,7 @@ class WorkspacePolicy
     }
 
     /**
-     * Seul le propriétaire peut modifier le workspace.
+     * Only the owner can edit the workspace.
      */
     public function update(User $user, Workspace $workspace): bool
     {
@@ -40,7 +40,7 @@ class WorkspacePolicy
     }
 
     /**
-     * Seul le propriétaire peut supprimer le workspace.
+     * Only the owner can delete the workspace.
      */
     public function delete(User $user, Workspace $workspace): bool
     {

@@ -28,7 +28,7 @@
 
             <a href="{{ route('tasks.edit', $task) }}"
                class="absolute right-4 top-1/2 -translate-y-1/2 text-xs text-gray-400 hover:text-gray-600 underline z-10">
-                Modifier
+                Edit
             </a>
 
         </li>

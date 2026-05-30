@@ -15,7 +15,7 @@ class WorkspaceMemberController extends Controller
     ) {}
 
     /**
-     * Invite un utilisateur existant dans le workspace.
+     * Invites an existing user into the workspace.
      */
     public function store(InviteMemberRequest $request, Workspace $workspace): RedirectResponse
     {
@@ -29,7 +29,7 @@ class WorkspaceMemberController extends Controller
 
             return redirect()
                 ->route('workspaces.show', $workspace)
-                ->with('success', "{$user->name} a été ajouté au workspace.");
+                ->with('success', "{$user->name} has been added to the workspace.");
 
         } catch (\RuntimeException $e) {
             return redirect()
@@ -39,7 +39,7 @@ class WorkspaceMemberController extends Controller
     }
 
     /**
-     * Retire un membre du workspace.
+     * Removes a member from the workspace.
      */
     public function destroy(Workspace $workspace, User $user): RedirectResponse
     {
@@ -50,7 +50,7 @@ class WorkspaceMemberController extends Controller
 
             return redirect()
                 ->route('workspaces.show', $workspace)
-                ->with('success', "{$user->name} a été retiré du workspace.");
+                ->with('success', "{$user->name} has been removed from the workspace.");
 
         } catch (\RuntimeException $e) {
             return redirect()

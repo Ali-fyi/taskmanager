@@ -7,35 +7,40 @@ use Illuminate\Support\Facades\Route;
 
 /*
 |--------------------------------------------------------------------------
-| API Routes — authentification par Bearer Token (Sanctum)
+| API Routes — Bearer Token authentication (Sanctum)
 |--------------------------------------------------------------------------
 |
-| POST   /api/login          → obtenir un token
-| POST   /api/logout         → révoquer le token courant
+| POST   /api/login          → obtain a token
+| POST   /api/logout         → revoke the current token
 |
-| GET    /api/projects        → liste paginée des projets
-| POST   /api/projects        → créer un projet
-| GET    /api/projects/{id}   → détail + tâches
-| PUT    /api/projects/{id}   → mettre à jour
-| DELETE /api/projects/{id}   → supprimer
+| GET    /api/projects        → paginated list of projects
+| POST   /api/projects        → create a project
+| GET    /api/projects/{id}   → detail + tasks
+| PUT    /api/projects/{id}   → update
+| DELETE /api/projects/{id}   → delete
 |
-| GET    /api/tasks           → liste paginée des tâches
-| POST   /api/tasks           → créer une tâche
-| GET    /api/tasks/{id}      → détail
-| PUT    /api/tasks/{id}      → mettre à jour
-| DELETE /api/tasks/{id}      → supprimer
+| GET    /api/tasks           → paginated list of tasks
+| POST   /api/tasks           → create a task
+| GET    /api/tasks/{id}      → detail
+| PUT    /api/tasks/{id}      → update
+| DELETE /api/tasks/{id}      → delete
 |
 */
 
-// Routes publiques — pas de token requis
-Route::post('/login', [AuthController::class, 'login']);
+// All API route names are prefixed with "api." to avoid collisions with the
+// web route names (e.g. the shallow "tasks.update" route in routes/web.php).
+Route::name('api.')->group(function () {
 
-// Routes protégées — Bearer Token requis
-Route::middleware('auth:sanctum')->group(function () {
+    // Public routes — no token required
+    Route::post('/login', [AuthController::class, 'login'])->name('login');
 
-    Route::post('/logout', [AuthController::class, 'logout']);
+    // Protected routes — Bearer Token required
+    Route::middleware('auth:sanctum')->group(function () {
 
-    Route::apiResource('projects', ProjectController::class);
+        Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
-    Route::apiResource('tasks', TaskController::class);
+        Route::apiResource('projects', ProjectController::class);
+
+        Route::apiResource('tasks', TaskController::class);
+    });
 });

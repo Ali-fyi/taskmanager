@@ -8,7 +8,7 @@ use App\Models\User;
 class ProjectPolicy
 {
     /**
-     * N'importe quel membre du workspace peut créer, voir et modifier des projets.
+     * Any workspace member can create, view and edit projects.
      */
     private function isMember(User $user, Project $project): bool
     {
@@ -22,7 +22,7 @@ class ProjectPolicy
 
     public function create(User $user): bool
     {
-        return true; // la vérification workspace se fait dans le controller
+        return true; // the workspace check is done in the controller
     }
 
     public function update(User $user, Project $project): bool
@@ -31,7 +31,7 @@ class ProjectPolicy
     }
 
     /**
-     * Seul le propriétaire du workspace peut supprimer un projet.
+     * Only the workspace owner can delete a project.
      */
     public function delete(User $user, Project $project): bool
     {

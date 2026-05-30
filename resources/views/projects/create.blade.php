@@ -5,7 +5,7 @@
                 {{ $workspace->name }}
             </a>
             <span>/</span>
-            <span class="text-gray-800 font-medium">Nouveau projet</span>
+            <span class="text-gray-800 font-medium">New project</span>
         </div>
     </x-slot>
 
@@ -17,16 +17,16 @@
                     <form method="POST" action="{{ route('workspaces.projects.store', $workspace) }}">
                         @csrf
 
-                        {{-- Nom --}}
+                        {{-- Name --}}
                         <div>
-                            <x-input-label for="name" value="Nom du projet" />
+                            <x-input-label for="name" value="Project name" />
                             <x-text-input
                                 id="name"
                                 name="name"
                                 type="text"
                                 class="mt-1 block w-full"
                                 :value="old('name')"
-                                placeholder="Ex : Site vitrine, Application mobile..."
+                                placeholder="E.g. Marketing site, Mobile app..."
                                 autofocus
                             />
                             <x-input-error :messages="$errors->get('name')" class="mt-2" />
@@ -34,20 +34,20 @@
 
                         {{-- Description --}}
                         <div class="mt-6">
-                            <x-input-label for="description" value="Description (optionnelle)" />
+                            <x-input-label for="description" value="Description (optional)" />
                             <textarea
                                 id="description"
                                 name="description"
                                 rows="3"
                                 class="mt-1 block w-full border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm"
-                                placeholder="Décrivez brièvement ce projet..."
+                                placeholder="Briefly describe this project..."
                             >{{ old('description') }}</textarea>
                             <x-input-error :messages="$errors->get('description')" class="mt-2" />
                         </div>
 
-                        {{-- Couleur --}}
+                        {{-- Color --}}
                         <div class="mt-6">
-                            <x-input-label for="color" value="Couleur d'accentuation" />
+                            <x-input-label for="color" value="Accent color" />
                             <div class="mt-1 flex items-center gap-3">
                                 <input
                                     type="color"
@@ -56,16 +56,16 @@
                                     value="{{ old('color', '#6366f1') }}"
                                     class="h-10 w-16 rounded-md border border-gray-300 cursor-pointer p-1"
                                 />
-                                <span class="text-sm text-gray-500">Choisissez une couleur pour identifier ce projet.</span>
+                                <span class="text-sm text-gray-500">Pick a color to identify this project.</span>
                             </div>
                             <x-input-error :messages="$errors->get('color')" class="mt-2" />
                         </div>
 
                         <div class="mt-6 flex items-center gap-4">
-                            <x-primary-button>Créer le projet</x-primary-button>
+                            <x-primary-button>Create project</x-primary-button>
                             <a href="{{ route('workspaces.show', $workspace) }}"
                                class="text-sm text-gray-600 hover:text-gray-900 underline">
-                                Annuler
+                                Cancel
                             </a>
                         </div>
                     </form>
