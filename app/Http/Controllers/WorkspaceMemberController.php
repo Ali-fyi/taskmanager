@@ -24,7 +24,8 @@ class WorkspaceMemberController extends Controller
         try {
             $user = $this->memberService->addMemberByEmail(
                 $workspace,
-                $request->email
+                $request->email,
+                $request->user(),
             );
 
             return redirect()

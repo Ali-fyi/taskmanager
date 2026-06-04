@@ -8,11 +8,16 @@ use App\Http\Requests\Api\UpdateTaskRequest;
 use App\Http\Resources\TaskResource;
 use App\Models\Project;
 use App\Models\Task;
+use App\Services\TaskService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 
 class TaskController extends Controller
 {
+    public function __construct(
+        private readonly TaskService $taskService,
+    ) {}
+
     /**
      * Paginated list of tasks in the user's workspaces.
      */
@@ -49,10 +54,13 @@ class TaskController extends Controller
     {
         $project = Project::findOrFail($request->project_id);
 
-        // Check that the user is a member of the project's workspace
         $this->authorize('view', $project);
 
-        $task = $project->tasks()->create($request->validated());
+        $task = $this->taskService->create(
+            $project,
+            $request->validated(),
+            $request->user(),
+        );
 
         return response()->json([
             'message' => 'Task created successfully.',
@@ -67,7 +75,11 @@ class TaskController extends Controller
     {
         $this->authorize('update', $task);
 
-        $task->update($request->validated());
+        $task = $this->taskService->update(
+            $task,
+            $request->validated(),
+            $request->user(),
+        );
 
         return response()->json([
             'message' => 'Task updated.',
@@ -82,7 +94,7 @@ class TaskController extends Controller
     {
         $this->authorize('delete', $task);
 
-        $task->delete();
+        $this->taskService->delete($task);
 
         return response()->json(['message' => 'Task deleted.'], 200);
     }

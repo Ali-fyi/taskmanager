@@ -7,11 +7,16 @@ use App\Http\Requests\UpdateTaskRequest;
 use App\Models\Project;
 use App\Models\Task;
 use App\Models\Workspace;
+use App\Services\TaskService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\View\View;
 
 class TaskController extends Controller
 {
+    public function __construct(
+        private readonly TaskService $taskService,
+    ) {}
+
     /**
      * Shows the task creation form.
      */
@@ -32,13 +37,13 @@ class TaskController extends Controller
     {
         $this->authorize('view', $project);
 
-        $project->tasks()->create([
+        $this->taskService->create($project, [
             'title'       => $request->title,
             'description' => $request->description,
             'status_id'   => $request->status_id,
             'assigned_to' => $request->assigned_to,
             'due_date'    => $request->due_date,
-        ]);
+        ], $request->user());
 
         return redirect()
             ->route('workspaces.projects.show', [$workspace, $project])
@@ -83,13 +88,13 @@ class TaskController extends Controller
     {
         $this->authorize('update', $task);
 
-        $task->update([
+        $this->taskService->update($task, [
             'title'       => $request->title,
             'description' => $request->description,
             'status_id'   => $request->status_id,
             'assigned_to' => $request->assigned_to,
             'due_date'    => $request->due_date,
-        ]);
+        ], $request->user());
 
         $project   = $task->project;
         $workspace = $project->workspace;
@@ -109,7 +114,7 @@ class TaskController extends Controller
         $project   = $task->project;
         $workspace = $project->workspace;
 
-        $task->delete();
+        $this->taskService->delete($task);
 
         return redirect()
             ->route('workspaces.projects.show', [$workspace, $project])

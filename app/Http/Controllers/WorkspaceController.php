@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\WorkspaceCreated;
 use App\Http\Requests\StoreWorkspaceRequest;
 use App\Http\Requests\UpdateWorkspaceRequest;
 use App\Models\Comment;
@@ -48,12 +49,7 @@ class WorkspaceController extends Controller
         // The owner is also added as a member with the 'owner' role
         $workspace->members()->attach(auth()->id(), ['role' => 'owner']);
 
-        // Default statuses automatically created for each new workspace
-        $workspace->statuses()->createMany([
-            ['name' => 'To do',       'color' => '#6366f1', 'position' => 1],
-            ['name' => 'In progress', 'color' => '#f59e0b', 'position' => 2],
-            ['name' => 'Done',        'color' => '#10b981', 'position' => 3],
-        ]);
+        WorkspaceCreated::dispatch($workspace, auth()->user());
 
         return redirect()
             ->route('workspaces.show', $workspace)
