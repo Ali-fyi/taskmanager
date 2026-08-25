@@ -20,10 +20,8 @@ class RecordTaskAssignment implements ShouldQueue
     {
         $task = Task::query()->find($event->task->id);
 
-        if ($task === null) {
-            Log::warning('Task assignment listener skipped: task no longer exists', [
-                'task_id' => $event->task->id,
-            ]);
+        if($task === null) {
+            Log::info("Task doesnn exist");
 
             return;
         }
