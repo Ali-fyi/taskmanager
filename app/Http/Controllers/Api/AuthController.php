@@ -8,6 +8,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\ValidationException;
+use Laravel\Sanctum\Sanctum;
 
 class AuthController extends Controller
 {
@@ -41,7 +42,15 @@ class AuthController extends Controller
      */
     public function logout(Request $request): JsonResponse
     {
-        $request->user()->currentAccessToken()->delete();
+        $token = $request->bearerToken();
+
+        if ($token !== null && $token !== '') {
+            $accessToken = Sanctum::$personalAccessTokenModel::findToken($token);
+
+            if ($accessToken !== null) {
+                $accessToken->delete();
+            }
+        }
 
         return response()->json(['message' => 'Logged out successfully.']);
     }

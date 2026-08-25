@@ -18,10 +18,7 @@ class LogTaskCreated implements ShouldQueue
 
     public function handle(TaskCreated $event): void
     {
-
-        if ($task === null) {
-            return;
-        }
+        $task = $event->task;
 
         Log::info('Task created', [
             'task_id'    => $task->id,
