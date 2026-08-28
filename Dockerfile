@@ -38,7 +38,7 @@ RUN npm run build
 # ============================================================
 # Stage 3 — Production application
 # ============================================================
-FROM php:8.3-fpm-bookworm
+FROM php:8.4-fpm-bookworm
 
 WORKDIR /var/www/html
 
