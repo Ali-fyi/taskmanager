@@ -62,6 +62,9 @@ RUN apt-get update \
 # Production PHP configuration
 RUN cp "$PHP_INI_DIR/php.ini-production" "$PHP_INI_DIR/php.ini"
 
+# OPcache configuration
+COPY docker/php/opcache.ini $PHP_INI_DIR/conf.d/opcache.ini
+
 # Copy Composer binary
 COPY --from=composer /usr/bin/composer /usr/bin/composer
 
@@ -70,6 +73,10 @@ COPY . .
 
 # Copy production PHP dependencies
 COPY --from=composer /app/vendor ./vendor
+
+# Laravel production caches
+RUN php artisan config:cache \
+    && php artisan view:cache
 
 # Copy compiled Vite assets
 COPY --from=frontend /app/public/build ./public/build
