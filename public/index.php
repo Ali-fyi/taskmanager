@@ -1,5 +1,7 @@
 <?php
 
+$start = microtime(true);
+
 use Illuminate\Foundation\Application;
 use Illuminate\Http\Request;
 
@@ -18,3 +20,5 @@ require __DIR__.'/../vendor/autoload.php';
 $app = require_once __DIR__.'/../bootstrap/app.php';
 
 $app->handleRequest(Request::capture());
+
+error_log('TOTAL_LARAVEL_MS=' . round((microtime(true) - $start) * 1000, 2));
