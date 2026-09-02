@@ -7,4 +7,5 @@ Route::get('/', function () {
 })->withoutMiddleware([
     \Illuminate\Session\Middleware\StartSession::class,
     \Illuminate\View\Middleware\ShareErrorsFromSession::class,
+    \Illuminate\Foundation\Http\Middleware\PreventRequestForgery::class,
 ]);
