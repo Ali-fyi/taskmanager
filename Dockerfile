@@ -74,9 +74,8 @@ COPY . .
 # Copy production PHP dependencies
 COPY --from=composer /app/vendor ./vendor
 
-# Laravel production caches
-RUN php artisan config:cache \
-    && php artisan view:cache
+# Laravel production view cache
+RUN php artisan view:cache
 
 # Copy compiled Vite assets
 COPY --from=frontend /app/public/build ./public/build
@@ -104,4 +103,7 @@ COPY docker/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 # Render provides PORT at runtime.
 EXPOSE 10000
 
-CMD ["/usr/bin/supervisord", "-n", "-c", "/etc/supervisor/supervisord.conf"]
+COPY docker/entrypoint.sh /usr/local/bin/taskmanager-entrypoint
+RUN chmod +x /usr/local/bin/taskmanager-entrypoint
+
+ENTRYPOINT ["/usr/local/bin/taskmanager-entrypoint"]
